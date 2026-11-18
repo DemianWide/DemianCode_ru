@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DemianCode — Frontend-разработчик · Портфолио</title>
+  <meta name="description" content="Портфолио frontend-разработчика: HTML, CSS, JavaScript и Figma. Адаптивные интерфейсы, дашборды, анимация и доступность. Живые демо работ.">
+  <meta name="theme-color" content="#0A0B0D">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="shortcut icon" href="assets/img/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    /* Тема применяется до отрисовки, чтобы страница не мигала */
+    (function () {
+      try {
+        var t = localStorage.getItem('pf-theme');
+        if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    })();
+    /* Шторка закрывает экран до загрузки, чтобы не было мигания */
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('fx-cover');
+  </script>
+  <link rel="stylesheet" href="css/portfolio.css?v=2">
+  <link rel="stylesheet" href="css/fx.css?v=3">
+</head>
+<body data-page="home">
+  <a class="skip" href="#main" id="skipLink">Перейти к содержимому</a>
+  <p class="sr-only" id="liveStatus" role="status" aria-live="polite"></p>
+
+  <header class="header" id="header">
+    <div class="container header__in">
+      <a href="#top" class="brand" id="brand" aria-label="DemianCode — на главную">
+        <span class="brand__mark" aria-hidden="true">D.</span>
+        <span class="brand__name" data-t="brand.name">DemianCode</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Основная навигация"><ul class="nav__list" id="navList"></ul></nav>
+      <div class="header__tools">
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Переключить тему оформления">
+          <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <a class="btn btn--accent btn--sm header__cta" href="#contact" data-t="cta">Написать</a>
+        <button class="icon-btn burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path class="b-open" d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path class="b-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- ГЛАВНАЯ -->
+    <section class="hero" id="top" aria-labelledby="heroTitle">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container hero__in">
+        <div class="hero__copy">
+          <p class="status"><span class="status__dot" aria-hidden="true"></span><span data-t="hero.status"></span></p>
+          <h1 class="hero__title" id="heroTitle"></h1>
+          <p class="hero__text" data-t="hero.text"></p>
+          <div class="hero__actions">
+            <a class="btn btn--accent btn--lg" href="#works" data-t="hero.primary"></a>
+            <a class="btn btn--ghost btn--lg" href="#contact" data-t="hero.secondary"></a>
+          </div>
+          <ul class="facts" id="facts"></ul>
+        </div>
+
+        <div class="sandbox" aria-hidden="true">
+          <div class="sandbox__bar"><i></i><i></i><i></i><span>components.css</span></div>
+          <div class="sandbox__body">
+            <div class="sb-chart"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="sb-row">
+              <span class="sb-toggle"><i></i></span><span class="sb-label">dark mode</span>
+              <span class="sb-swatches"><i></i><i></i><i></i><i></i></span>
+            </div>
+            <pre class="sb-code"><span class="c-k">.card</span> {
+  <span class="c-p">transition</span>: transform .4s
+    <span class="c-v">cubic-bezier</span>(.2, .8, .2, 1);
+}
+<span class="c-k">.card:hover</span> { <span class="c-p">transform</span>: <span class="c-v">translateY</span>(-6px); }</pre>
+          </div>
+          <span class="sandbox__chip sandbox__chip--a">Figma → код</span>
+          <span class="sandbox__chip sandbox__chip--b">aria-live</span>
+        </div>
+      </div>
+      <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
+    </section>
+
+    <!-- РАБОТЫ -->
+    <section class="section" id="works" aria-labelledby="worksTitle">
+      <div class="container">
+        <header class="section__head rv">
+          <p class="eyebrow" data-t="works.eyebrow"></p>
+          <h2 class="section__title" id="worksTitle" data-t="works.title"></h2>
+          <p class="section__lead" data-t="works.lead"></p>
+        </header>
+        <div class="works" id="worksList"></div>
+      </div>
+    </section>
+
+    <!-- ОБО МНЕ -->
+    <section class="section" id="about" aria-labelledby="aboutTitle">
+      <div class="container">
+        <div class="about">
+          <figure class="about__photo rv">
+            <span class="about__mono" aria-hidden="true">Д</span>
+            <img src="assets/img/me.jpg" alt="" id="aboutImg" width="640" height="800" loading="lazy" decoding="async" onerror="this.remove()">
+          </figure>
+          <div class="about__copy rv">
+            <p class="eyebrow" data-t="about.eyebrow"></p>
+            <h2 class="section__title" id="aboutTitle" data-t="about.title"></h2>
+            <div id="aboutParagraphs"></div>
+          </div>
+        </div>
+
+        <ul class="principles" id="principles"></ul>
+
+        <div class="skills-wrap">
+          <h3 class="block-title rv" data-t="about.skills_title"></h3>
+          <div class="skills" id="skills"></div>
+        </div>
+
+        <div class="process-wrap">
+          <h3 class="block-title rv" data-t="about.process_title"></h3>
+          <ol class="process" id="process"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- КОНТАКТЫ -->
+    <section class="section" id="contact" aria-labelledby="contactTitle">
+      <div class="container">
+        <div class="contact rv">
+          <p class="eyebrow" data-t="contact.eyebrow"></p>
+          <h2 class="contact__title" id="contactTitle" data-t="contact.title"></h2>
+          <p class="section__lead" data-t="contact.text"></p>
+          <div class="contact__main">
+            <a class="contact__mail" id="contactMail" href="#"></a>
+            <button class="btn btn--ghost" id="copyMail" type="button" data-t="contact.copy"></button>
+          </div>
+          <ul class="contact__links" id="contactLinks"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__in">
+      <span data-t="footer.copyright"></span>
+      <span data-t="footer.note"></span>
+      <a href="#top" data-t="footer.top"></a>
+    </div>
+  </footer>
+
+  <noscript><p class="noscript">Для работы сайта нужен JavaScript.</p></noscript>
+  <script src="data/site.js?v=3"></script>
+  <script src="js/portfolio.js?v=2"></script>
+  <script src="js/fx.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Кейс · DemianCode</title>
+  <meta name="theme-color" content="#0A0B0D">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="shortcut icon" href="assets/img/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('pf-theme');
+        if (!t) t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    })();
+    /* Шторка закрывает экран до загрузки, чтобы не было мигания */
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('fx-cover');
+  </script>
+  <link rel="stylesheet" href="css/portfolio.css?v=2">
+  <link rel="stylesheet" href="css/fx.css?v=3">
+</head>
+<body data-page="project">
+  <a class="skip" href="#main" id="skipLink">Перейти к содержимому</a>
+  <p class="sr-only" id="liveStatus" role="status" aria-live="polite"></p>
+
+  <header class="header" id="header">
+    <div class="container header__in">
+      <a href="index.html" class="brand" id="brand" aria-label="DemianCode — на главную">
+        <span class="brand__mark" aria-hidden="true">D.</span>
+        <span class="brand__name" data-t="brand.name">DemianCode</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Основная навигация"><ul class="nav__list" id="navList"></ul></nav>
+      <div class="header__tools">
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Переключить тему оформления">
+          <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <a class="btn btn--accent btn--sm header__cta" href="index.html#contact" data-t="cta">Написать</a>
+        <button class="icon-btn burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path class="b-open" d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/><path class="b-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1" class="case-main">
+    <div class="container" id="caseRoot"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__in">
+      <span data-t="footer.copyright"></span>
+      <span data-t="footer.note"></span>
+      <a href="index.html" data-t="ui.home"></a>
+    </div>
+  </footer>
+
+  <noscript><p class="noscript">Для работы сайта нужен JavaScript.</p></noscript>
+  <script src="data/site.js?v=3"></script>
+  <script src="js/portfolio.js?v=2"></script>
+  <script src="js/fx.js?v=3"></script>
+</body>
+</html>

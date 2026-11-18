@@ -1,0 +1,156 @@
+/* ==========================================================
+   Эффекты: аврора, зерно, курсор, spotlight, шторка, частицы.
+   Подключается после portfolio.css. Всё отключается при
+   prefers-reduced-motion (см. конец файла и js/fx.js).
+   ========================================================== */
+@property --ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+
+:root {
+  --aur-1: rgba(200, 242, 90, .16);
+  --aur-2: rgba(70, 160, 255, .13);
+  --aur-3: rgba(170, 90, 255, .12);
+  --grain-op: .06;
+  --shine-a: #C8F25A;
+  --shine-b: #FFFFFF;
+}
+[data-theme="light"] {
+  --aur-1: rgba(180, 230, 40, .30);
+  --aur-2: rgba(80, 170, 255, .20);
+  --aur-3: rgba(190, 110, 255, .16);
+  --grain-op: .09;
+  --shine-a: #3B6200;
+  --shine-b: #8FD800;
+}
+
+/* ---------- Прогресс скролла ---------- */
+.fx-progress { position: fixed; z-index: 120; left: 0; top: 0; width: 100%; height: 3px; transform-origin: 0 50%; transform: scaleX(var(--p, 0)); background: linear-gradient(90deg, var(--accent), #6FD6FF 60%, #B58CFF); box-shadow: 0 0 14px var(--accent); pointer-events: none; }
+
+/* ---------- Аврора и зерно ---------- */
+.fx-aurora { position: fixed; inset: -10vmax; z-index: -1; pointer-events: none; overflow: hidden; transform: translate3d(0, calc(var(--sy, 0) * -60px), 0); }
+.fx-aurora i { position: absolute; border-radius: 50%; filter: blur(90px); will-change: transform; }
+.fx-aurora i:nth-child(1) { width: 46vmax; height: 46vmax; left: 4%; top: 2%; background: radial-gradient(circle, var(--aur-1), transparent 65%); animation: aur1 26s ease-in-out infinite alternate; }
+.fx-aurora i:nth-child(2) { width: 42vmax; height: 42vmax; right: 0; top: 24%; background: radial-gradient(circle, var(--aur-2), transparent 65%); animation: aur2 32s ease-in-out infinite alternate; }
+.fx-aurora i:nth-child(3) { width: 38vmax; height: 38vmax; left: 30%; bottom: 0; background: radial-gradient(circle, var(--aur-3), transparent 65%); animation: aur3 38s ease-in-out infinite alternate; }
+@keyframes aur1 { to { transform: translate3d(22vmax, 14vmax, 0) scale(1.25); } }
+@keyframes aur2 { to { transform: translate3d(-24vmax, -8vmax, 0) scale(.85); } }
+@keyframes aur3 { to { transform: translate3d(-18vmax, -16vmax, 0) scale(1.2); } }
+
+.fx-grain { position: fixed; inset: 0; z-index: 110; pointer-events: none; opacity: var(--grain-op); mix-blend-mode: overlay; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); animation: grain 1.2s steps(6) infinite; }
+[data-theme="light"] .fx-grain { mix-blend-mode: multiply; }
+@keyframes grain { 0% { transform: translate(0, 0); } 20% { transform: translate(-3%, 2%); } 40% { transform: translate(2%, -3%); } 60% { transform: translate(-2%, -1%); } 80% { transform: translate(3%, 3%); } 100% { transform: translate(0, 0); } }
+
+/* ---------- Частицы в hero ---------- */
+.fx-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .85; mask-image: linear-gradient(#000 55%, transparent); -webkit-mask-image: linear-gradient(#000 55%, transparent); }
+
+/* ---------- Курсор ---------- */
+.fx-cur, .fx-dot { position: fixed; left: 0; top: 0; z-index: 130; pointer-events: none; opacity: 0; transition: opacity .3s; }
+.fx-cursor-on .fx-cur, .fx-cursor-on .fx-dot { opacity: 1; }
+.fx-cur { width: 2.6rem; height: 2.6rem; margin: -1.3rem 0 0 -1.3rem; border-radius: 50%; border: 1.5px solid var(--accent); display: grid; place-items: center; font: 700 .72rem/1 var(--font); letter-spacing: .02em; color: var(--accent-ink); background: transparent; transition: width .35s var(--ease), height .35s var(--ease), margin .35s var(--ease), background .3s, opacity .3s, border-color .3s; backdrop-filter: none; }
+.fx-cur span { opacity: 0; transition: opacity .2s; white-space: nowrap; }
+.fx-cur.is-link { width: 4rem; height: 4rem; margin: -2rem 0 0 -2rem; background: var(--accent-soft); }
+.fx-cur.is-view { width: 5.4rem; height: 5.4rem; margin: -2.7rem 0 0 -2.7rem; background: var(--accent); }
+.fx-cur.is-view span { opacity: 1; }
+.fx-cur.is-down { transform: scale(.85); }
+.fx-dot { width: .4rem; height: .4rem; margin: -.2rem 0 0 -.2rem; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.fx-cur.is-view ~ .fx-dot { opacity: 0; }
+
+/* ---------- Spotlight на карточках ---------- */
+.fx-spot { position: relative; isolation: isolate; }
+.fx-spot::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .35s; background: radial-gradient(22rem circle at var(--sx, 50%) var(--sy, 50%), var(--accent-soft), transparent 62%); }
+.fx-spot:hover::after { opacity: 1; }
+.fx-spot::before { z-index: auto; }
+
+/* ---------- Заголовки по словам ---------- */
+.fx-split .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+.fx-split .w > span { display: inline-block; transform: translateY(112%) rotate(4deg); opacity: 0; transition: transform .9s var(--ease), opacity .6s; transition-delay: calc(var(--wi, 0) * 70ms); }
+.fx-split.fx-in .w > span { transform: none; opacity: 1; }
+
+/* ---------- Блик на hero-акценте ---------- */
+.hero__title em { background-image: linear-gradient(100deg, var(--shine-a) 38%, var(--shine-b) 50%, var(--shine-a) 62%); background-size: 260% 100%; background-position: 120% 0; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; animation: shine 5.5s ease-in-out 1.6s infinite; }
+@keyframes shine { 0%, 35% { background-position: 120% 0; } 70%, 100% { background-position: -20% 0; } }
+
+/* ---------- Работы: свет, масштаб, блик ---------- */
+.work__preview { transition: translate .2s linear; }
+.browser { transition: transform .5s var(--ease), box-shadow .4s, border-color .3s, scale .5s var(--ease); }
+.work__preview:hover .browser { scale: 1.025; box-shadow: var(--shadow), 0 0 0 1px var(--accent-text), 0 40px 90px -30px var(--accent-soft); }
+.browser::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .35s; background: radial-gradient(26rem circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .16), transparent 55%); mix-blend-mode: soft-light; }
+.work__preview:hover .browser::after { opacity: 1; }
+.work__n { position: relative; display: inline-block; }
+.work__n::after { content: ""; position: absolute; left: 100%; top: 50%; width: 0; height: 1px; margin-left: .7rem; background: var(--accent-text); transition: width .8s var(--ease) .2s; }
+.work.is-in .work__n::after { width: 3.5rem; }
+.work__title { background-image: linear-gradient(var(--accent-text), var(--accent-text)); background-repeat: no-repeat; background-position: 0 100%; background-size: 0 .08em; transition: background-size .6s var(--ease); width: fit-content; }
+.work:hover .work__title { background-size: 100% .08em; }
+
+/* ---------- Карточки: объём ---------- */
+.principle, .skill, .feat li { transition: border-color .3s, transform .5s var(--ease), box-shadow .5s var(--ease); }
+.principle:hover, .skill:hover, .feat li:hover { transform: translateY(-6px); box-shadow: 0 30px 60px -34px var(--accent-soft), var(--shadow); border-color: var(--accent-text); }
+.chips li { transition: transform .3s var(--ease), background .25s, border-color .25s, color .25s; }
+.chips li:hover { transform: translateY(-3px) scale(1.05); background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.step__n { display: inline-block; transition: transform .5s var(--ease); }
+.step:hover .step__n { transform: translateX(8px); }
+
+/* ---------- Контакты: бегущая рамка ---------- */
+.contact::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; background: conic-gradient(from var(--ang), transparent 0 60%, var(--accent) 80%, #6FD6FF 90%, transparent 100%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: spin 7s linear infinite; }
+@keyframes spin { to { --ang: 360deg; } }
+.contact__mail { background-image: linear-gradient(var(--accent), var(--accent)); background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 3px; border-bottom: 0; padding-bottom: .2rem; transition: color .25s, background-size .5s var(--ease); }
+.contact__mail:hover { background-size: 100% 100%; color: var(--accent-ink); }
+[data-theme="light"] .contact__mail:hover { color: var(--accent-ink); }
+
+/* ---------- Кнопки: переливающийся блик ---------- */
+.btn--accent { position: relative; overflow: hidden; isolation: isolate; }
+.btn--accent::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .55) 50%, transparent 70%); transform: translateX(-130%); }
+.btn--accent:hover::before { transform: translateX(130%); transition: transform .8s var(--ease); }
+.btn { will-change: transform; }
+
+/* ---------- Страница кейса ---------- */
+.case__title { background-image: linear-gradient(100deg, var(--text) 30%, var(--accent-text) 50%, var(--text) 70%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shine 7s ease-in-out 1s infinite; }
+.demo__frame { position: relative; animation: pulseGlow 6s ease-in-out infinite; }
+@keyframes pulseGlow { 0%, 100% { box-shadow: var(--shadow), 0 0 0 0 transparent; } 50% { box-shadow: var(--shadow), 0 0 80px -20px var(--accent-soft); } }
+.next strong .arr { display: inline-block; transition: transform .5s var(--ease); }
+.next:hover strong .arr { transform: translateX(14px); }
+
+/* ---------- Шторка перехода и заставка ---------- */
+html.fx-cover::after { content: ""; position: fixed; inset: 0; z-index: 998; background: var(--bg); }
+.fx-curtain { position: fixed; inset: 0; z-index: 999; display: grid; place-items: center; pointer-events: none; background: var(--bg); transform: translateY(0); transition: transform .85s cubic-bezier(.76, 0, .24, 1); will-change: transform; }
+.fx-curtain::before { content: ""; position: absolute; inset: auto 0 0 0; height: 3px; background: var(--accent); transform-origin: 0 50%; transform: scaleX(var(--load, 0)); box-shadow: 0 0 22px var(--accent); }
+.fx-curtain__mark { font-size: clamp(5rem, 22vw, 14rem); font-weight: 800; letter-spacing: -.06em; line-height: 1; color: var(--text); opacity: 0; transform: translateY(30px) scale(.94); transition: opacity .5s, transform .8s var(--ease); }
+.fx-curtain__mark b { color: var(--accent-text); font-weight: 800; }
+.fx-curtain__name { position: absolute; left: clamp(1rem, 4vw, 3rem); bottom: clamp(1.4rem, 4vw, 3rem); font-family: var(--mono); font-size: clamp(1rem, 2.4vw, 1.6rem); letter-spacing: .04em; color: var(--muted); opacity: 0; transition: opacity .5s; }
+.fx-curtain.is-show .fx-curtain__name { opacity: 1; }
+.fx-curtain__n { position: absolute; right: clamp(1rem, 4vw, 3rem); bottom: clamp(1.4rem, 4vw, 3rem); font-family: var(--mono); font-size: clamp(1rem, 2.4vw, 1.6rem); color: var(--muted); font-variant-numeric: tabular-nums; opacity: 0; transition: opacity .4s; }
+.fx-curtain.is-show .fx-curtain__mark, .fx-curtain.is-show .fx-curtain__name { position: absolute; left: clamp(1rem, 4vw, 3rem); bottom: clamp(1.4rem, 4vw, 3rem); font-family: var(--mono); font-size: clamp(1rem, 2.4vw, 1.6rem); letter-spacing: .04em; color: var(--muted); opacity: 0; transition: opacity .5s; }
+.fx-curtain.is-show .fx-curtain__name { opacity: 1; }
+.fx-curtain__n { opacity: 1; transform: none; }
+.fx-curtain.is-out { transform: translateY(-101%); }
+.fx-curtain.is-in-nav { transform: translateY(0); background: var(--accent); }
+.fx-curtain.is-in-nav::before { display: none; }
+.fx-curtain.is-pre { transform: translateY(101%); transition: none; }
+.fx-curtain.is-pre.is-go { transform: translateY(0); transition: transform .5s cubic-bezier(.76, 0, .24, 1); }
+
+/* Лёгкий въезд контента после шторки */
+html.fx-ready .hero__copy > *, html.fx-ready .sandbox { animation: fxUp 1s var(--ease) backwards; }
+html.fx-ready .hero__copy > :nth-child(2) { animation-delay: .08s; }
+html.fx-ready .hero__copy > :nth-child(3) { animation-delay: .18s; }
+html.fx-ready .hero__copy > :nth-child(4) { animation-delay: .26s; }
+html.fx-ready .hero__copy > :nth-child(5) { animation-delay: .34s; }
+html.fx-ready .sandbox { animation-delay: .25s; }
+@keyframes fxUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Сенсорные экраны и экономия ---------- */
+@media (hover: none), (pointer: coarse) { .fx-cur, .fx-dot { display: none; } }
+@media (max-width: 680px) { .fx-aurora i { filter: blur(60px); } .fx-grain { opacity: calc(var(--grain-op) * .6); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-aurora i, .fx-grain, .contact::after, .hero__title em, .case__title, .demo__frame { animation: none !important; }
+  .fx-split .w > span { transform: none; opacity: 1; transition: none; }
+  .fx-curtain, html.fx-cover::after, .fx-canvas { display: none !important; }
+  html.fx-ready .hero__copy > *, html.fx-ready .sandbox { animation: none; }
+  .hero__title em, .case__title { -webkit-text-fill-color: currentColor; color: var(--accent-text); background: none; }
+  .case__title { color: var(--text); }
+}
+[data-motion="off"] .fx-aurora i, [data-motion="off"] .fx-grain { animation: none; }
+@media (forced-colors: active) {
+  .fx-aurora, .fx-grain, .fx-canvas, .fx-cur, .fx-dot, .fx-progress { display: none; }
+  .hero__title em, .case__title { -webkit-text-fill-color: currentColor; background: none; }
+}
+@media print { .fx-aurora, .fx-grain, .fx-canvas, .fx-cur, .fx-dot, .fx-progress, .fx-curtain { display: none !important; } }

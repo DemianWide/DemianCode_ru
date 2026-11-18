@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StoreCRM | Клиенты</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body data-page="clients" data-search="1">
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="logo">Store<span>CRM</span></div>
+    <nav aria-label="Разделы"><ul class="nav-menu">
+      <li><a href="e_commerce_dashboard.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📊</span> Дашборд</a></li>
+      <li><a href="e_commerce_crm.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📦</span> Заказы</a></li>
+      <li><a href="e_commerce_clients.html" class="nav-item active" aria-current="page"><span class="nav-icon" aria-hidden="true">👥</span> Клиенты</a></li>
+      <li><a href="e_commerce_analytics.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📈</span> Аналитика</a></li>
+      <li><a href="e_commerce_payouts.html" class="nav-item"><span class="nav-icon" aria-hidden="true">💳</span> Выплаты</a></li>
+      <li style="margin-top: auto;"><a href="e_commerce_settings.html" class="nav-item"><span class="nav-icon" aria-hidden="true">⚙️</span> Настройки</a></li>
+    </ul></nav>
+  </aside>
+  <header class="header">
+    <div class="page-title">Клиенты</div>
+    <div class="header-actions">
+      <div class="search-box"><input type="text" id="globalSearch" placeholder="Поиск по клиентам..."></div>
+      <div class="user-profile">
+        <div class="user-info"><div class="user-name">Дмитрий</div><div class="user-role">Владелец магазина</div></div>
+        <img src="img/avatar-owner.webp" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&amp;w=150&amp;auto=format&amp;fit=crop'" alt="Дмитрий, владелец магазина" class="avatar">
+      </div>
+    </div>
+  </header>
+  <main class="dashboard-container" id="main">
+
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-header"><div class="metric-icon icon-indigo" aria-hidden="true">👥</div><div class="metric-trend trend-up">↑ 8.1%</div></div><div class="metric-value" id="mAll">—</div><div class="metric-title">Клиентов в базе</div></div>
+      <div class="metric-card"><div class="metric-header"><div class="metric-icon icon-emerald" aria-hidden="true">✨</div><div class="metric-trend trend-up">↑ 14%</div></div><div class="metric-value" id="mNew">—</div><div class="metric-title">Новых за 30 дней</div></div>
+      <div class="metric-card"><div class="metric-header"><div class="metric-icon icon-purple" aria-hidden="true">👑</div><div class="metric-trend trend-up">↑ 2</div></div><div class="metric-value" id="mVip">—</div><div class="metric-title">VIP-клиентов</div></div>
+      <div class="metric-card"><div class="metric-header"><div class="metric-icon icon-amber" aria-hidden="true">💰</div><div class="metric-trend trend-up">↑ 6.3%</div></div><div class="metric-value" id="mLtv">—</div><div class="metric-title">Средняя ценность клиента</div></div>
+    </div>
+    <section class="panel" aria-labelledby="tt">
+      <div class="panel-header">
+        <span class="panel-title" id="tt">База клиентов</span>
+        <div class="toolbar">
+          <div class="chips" role="group" aria-label="Сегмент" id="chips"></div>
+          <input class="input" id="q" type="search" placeholder="Имя или город" aria-label="Поиск по имени или городу">
+          <button class="btn btn--ghost" id="exp" type="button">Скачать CSV</button>
+        </div>
+      </div>
+      <div class="table-wrap"><table class="data" id="tbl">
+        <thead><tr>
+          <th aria-sort="none" data-k="name"><button type="button">Клиент</button></th>
+          <th aria-sort="none" data-k="city"><button type="button">Город</button></th>
+          <th class="num" aria-sort="none" data-k="orders"><button type="button">Заказов</button></th>
+          <th class="num" aria-sort="none" data-k="total"><button type="button">Сумма</button></th>
+          <th aria-sort="none" data-k="ago"><button type="button">Последний заказ</button></th>
+          <th>Сегмент</th><th><span class="sr">Действие</span></th>
+        </tr></thead><tbody></tbody></table></div>
+      <div class="empty" id="empty" hidden>Никого не нашли. Попробуйте другой запрос или сегмент.</div>
+      <p class="count" id="count" aria-live="polite"></p>
+    </section>
+    <div class="scrim" id="scrim"></div>
+    <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dName" tabindex="-1" aria-hidden="true">
+      <button class="btn btn--ghost close" id="dClose" type="button" aria-label="Закрыть карточку">✕</button>
+      <div class="ava" id="dAva" style="width:64px;height:64px;font-size:22px"></div>
+      <h2 id="dName"></h2><div class="muted" id="dMeta"></div>
+      <div class="kv" id="dKv"></div>
+      <h3 style="font-size:16px;margin-bottom:6px">Последние заказы</h3><div id="dOrd"></div>
+      <div style="display:flex;gap:10px;margin-top:24px"><button class="btn btn--primary" id="dMsg" type="button">Написать клиенту</button><a class="btn btn--ghost" href="e_commerce_crm.html">К заказам</a></div>
+    </aside>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script>
+
+document.body.dataset.search = '1';
+var D = [
+ ['Анна Соколова','Москва',14,286400,3,'Наушники Aura Buds'],['Игорь Петров','Санкт-Петербург',9,198200,12,'Наушники Aura ANC'],
+ ['Мария Лебедева','Казань',1,12990,5,'Клавиатура Forma K75'],['Сергей Волков','Екатеринбург',5,74300,28,'Смарт-часы Pulse S8'],
+ ['Елена Кузнецова','Москва',22,412900,1,'Наушники Aura Buds'],['Артём Морозов','Новосибирск',2,31800,95,'Клавиатура Forma K75'],
+ ['Ольга Новикова','Самара',7,118600,18,'Наушники Aura ANC'],['Дмитрий Орлов','Воронеж',1,4990,2,'Клавиатура Forma K75'],
+ ['Наталья Фёдорова','Санкт-Петербург',11,167500,9,'Смарт-часы Pulse S8'],['Павел Захаров','Краснодар',3,45200,74,'Наушники Aura ANC'],
+ ['Юлия Белова','Москва',6,92100,33,'Наушники Aura Buds'],['Максим Тарасов','Уфа',1,8900,41,'Клавиатура Forma K75']
+].map(function (r, i) { return { id: i, name: r[0], city: r[1], orders: r[2], total: r[3], ago: r[4], fav: r[5] }; });
+D.forEach(function (c) { c.seg = c.total >= 150000 ? 'VIP' : c.ago > 60 ? 'Спящие' : c.orders <= 1 ? 'Новые' : 'Активные'; });
+var SEGS = ['Все', 'VIP', 'Активные', 'Новые', 'Спящие'], CLS = { VIP: 'b-vip', 'Активные': 'b-act', 'Новые': 'b-new', 'Спящие': 'b-sleep' };
+var COL = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444'];
+var seg = 'Все', sk = 'total', sd = -1, last = null;
+function ini(n) { return n.split(' ').map(function (w) { return w[0]; }).join(''); }
+function agoTxt(d) { return d === 0 ? 'сегодня' : d === 1 ? 'вчера' : d < 5 ? d + ' дня назад' : d + ' дн. назад'; }
+$('#mAll').textContent = D.length;
+$('#mNew').textContent = D.filter(function (c) { return c.orders <= 1 && c.ago <= 30; }).length;
+$('#mVip').textContent = D.filter(function (c) { return c.seg === 'VIP'; }).length;
+$('#mLtv').textContent = rub(D.reduce(function (a, c) { return a + c.total; }, 0) / D.length);
+SEGS.forEach(function (s) {
+  var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = s; b.setAttribute('aria-pressed', String(s === seg));
+  b.onclick = function () { seg = s; $$('.chip').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); draw(); };
+  $('#chips').appendChild(b);
+});
+function list() {
+  var q = $('#q').value.trim().toLowerCase();
+  var r = D.filter(function (c) { return (seg === 'Все' || c.seg === seg) && (!q || (c.name + ' ' + c.city).toLowerCase().indexOf(q) > -1); });
+  r.sort(function (a, b) { var x = a[sk], y = b[sk]; return (typeof x === 'string' ? x.localeCompare(y, 'ru') : x - y) * sd; });
+  return r;
+}
+function draw() {
+  var r = list(), tb = $('#tbl tbody'); tb.innerHTML = '';
+  r.forEach(function (c) {
+    var tr = document.createElement('tr'); tr.className = 'is-click';
+    tr.innerHTML = '<td><div class="who"><div class="ava" style="background:' + COL[c.id % COL.length] + '">' + ini(c.name) + '</div><div><b>' + c.name + '</b><span>' + c.fav + '</span></div></div></td><td>' + c.city + '</td><td class="num">' + c.orders + '</td><td class="num"><b>' + rub(c.total) + '</b></td><td class="muted">' + agoTxt(c.ago) + '</td><td><span class="badge ' + CLS[c.seg] + '">' + c.seg + '</span></td><td><button class="row-btn" type="button">Открыть</button></td>';
+    tr.onclick = function () { open(c, tr.querySelector('.row-btn')); };
+    tb.appendChild(tr);
+  });
+  $('#empty').hidden = r.length > 0; $('#tbl').hidden = !r.length;
+  $('#count').textContent = 'Показано ' + r.length + ' из ' + D.length;
+}
+$$('#tbl th[data-k]').forEach(function (th) {
+  th.querySelector('button').onclick = function () {
+    var k = th.dataset.k; sd = (sk === k) ? -sd : 1; sk = k;
+    $$('#tbl th[data-k]').forEach(function (x) { x.setAttribute('aria-sort', 'none'); });
+    th.setAttribute('aria-sort', sd === 1 ? 'ascending' : 'descending'); draw();
+  };
+});
+$('#q').oninput = draw;
+var qs = new URLSearchParams(location.search).get('q'); if (qs) { $('#q').value = qs; $('#globalSearch').value = qs; }
+$('#globalSearch').addEventListener('input', function (e) { $('#q').value = e.target.value; draw(); });
+$('#exp').onclick = function () {
+  var rows = [['Имя', 'Город', 'Заказов', 'Сумма, ₽', 'Дней с последнего заказа', 'Сегмент']];
+  list().forEach(function (c) { rows.push([c.name, c.city, c.orders, c.total, c.ago, c.seg]); });
+  csv('klienty.csv', rows); toast('Файл klienty.csv скачан');
+};
+var dr = $('#drawer'), sc = $('#scrim');
+function open(c, from) {
+  last = from; $('#dAva').textContent = ini(c.name); $('#dAva').style.background = COL[c.id % COL.length];
+  $('#dName').textContent = c.name; $('#dMeta').textContent = c.city + ' · ' + c.seg;
+  $('#dKv').innerHTML = '<div><small>Заказов</small><b>' + c.orders + '</b></div><div><small>Потрачено</small><b>' + rub(c.total) + '</b></div><div><small>Средний чек</small><b>' + rub(c.total / c.orders) + '</b></div><div><small>Последний заказ</small><b>' + agoTxt(c.ago) + '</b></div>';
+  var o = '', n = Math.min(3, c.orders);
+  for (var i = 0; i < n; i++) o += '<div class="ord"><span>#' + (4100 + c.id * 37 + i * 11) + ' · ' + (i ? ['Клавиатура Forma K75', 'Наушники Aura Buds', 'Наушники Aura ANC'][(c.id + i) % 3] : c.fav) + '</span><b>' + rub(c.total / c.orders * (1 - i * .12)) + '</b></div>';
+  $('#dOrd').innerHTML = o;
+  $('#dMsg').onclick = function () { toast('Сообщение для ' + c.name.split(' ')[0] + ' подготовлено'); };
+  dr.classList.add('on'); sc.classList.add('on'); dr.setAttribute('aria-hidden', 'false'); dr.focus();
+}
+function close() { dr.classList.remove('on'); sc.classList.remove('on'); dr.setAttribute('aria-hidden', 'true'); if (last) last.focus(); }
+$('#dClose').onclick = close; sc.onclick = close;
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dr.classList.contains('on')) close(); });
+draw();
+
+</script>
+</body>
+</html>

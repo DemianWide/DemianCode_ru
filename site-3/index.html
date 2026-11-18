@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIELDCODE — программы, боты и калькуляторы для строительства и монтажа</title>
+  <meta name="description" content="Делаю ИИ-системы, ботов и сложные калькуляторы для малого бизнеса в строительстве и монтаже. Сам работал руками на монтаже — решения проверены в поле.">
+  <meta name="color-scheme" content="dark light">
+  <!-- Превью при отправке ссылки. После публикации замените относительный путь на полный URL сайта -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="FIELDCODE — программы, боты и калькуляторы для строительства и монтажа">
+  <meta property="og:description" content="ИИ-системы, боты и калькуляторы для малого бизнеса. Сам работал руками на монтаже — решения проверены в поле.">
+  <meta property="og:image" content="assets/images/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <!-- Применяем сохранённые настройки до отрисовки, чтобы не было «мигания» темы -->
+  <script>
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('fc-prefs') || '{}');
+        var r = document.documentElement;
+        var theme = s.theme || 'dark';
+        if (theme === 'auto') theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        r.dataset.theme = theme;
+        if (s.fs) r.dataset.fs = s.fs;
+        if (s.contrast) r.dataset.contrast = 'high';
+        if (s.motion === 'off') r.dataset.motion = 'off';
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-key="skip_link">Перейти к содержимому</a>
+
+  <!-- Живая зона для сообщений скринридеру (смена темы, результат расчёта) -->
+  <div class="sr-only" id="liveStatus" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="bg" aria-hidden="true">
+    <img class="bg__img bg__img--dark" src="assets/images/bg.webp" alt="" loading="lazy" decoding="async" onerror="this.remove()">
+    <img class="bg__img bg__img--light" src="assets/images/bg-light.webp" alt="" loading="lazy" decoding="async" onerror="this.remove()">
+    <div class="bg__grid"></div>
+    <div class="bg__glow bg__glow--accent"></div>
+    <div class="bg__glow bg__glow--steel"></div>
+  </div>
+
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#top" class="brand" aria-label="FIELDCODE — на главную">
+        <svg class="brand__logo" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--logo-a)"/><stop offset="1" stop-color="var(--logo-b)"/></linearGradient>
+          </defs>
+          <polygon class="brand__hex" points="32,3 57,17.5 57,46.5 32,61 7,46.5 7,17.5" fill="none" stroke="url(#lg)" stroke-width="3"/>
+          <polygon class="brand__core" points="32,11 50,21.5 50,42.5 32,53 14,42.5 14,21.5" fill="var(--accent-soft)" stroke="var(--border)" stroke-width="1"/>
+          <path class="brand__l" d="M26 23 L18 32 L26 41" fill="none" stroke="var(--text)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path class="brand__r" d="M38 23 L46 32 L38 41" fill="none" stroke="var(--text)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle class="brand__dot" cx="32" cy="32" r="3.6" fill="var(--accent)"/>
+        </svg>
+        <span class="brand__text" data-key="brand.name">FIELDCODE</span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Основная навигация">
+        <ul class="nav__list" id="navList"></ul>
+      </nav>
+
+      <div class="header__tools">
+        <button class="icon-btn" id="themeQuick" type="button" aria-label="Переключить тему оформления">
+          <svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          <svg class="icon icon--sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-btn" id="a11yBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11yPanel" aria-label="Настройки доступности">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="4.5" r="2" fill="currentColor"/><path d="M4 8.5h16M12 8.5v5.5m0 0-3.5 6.5M12 14l3.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <a href="#contacts" class="btn btn--sm btn--ghost header__cta" data-lead data-key="header_cta">Написать мне</a>
+        <button class="icon-btn burger" id="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="nav">
+          <span aria-hidden="true"></span><span aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Панель доступности -->
+  <div class="a11y" id="a11yPanel" role="dialog" aria-modal="false" aria-labelledby="a11yTitle" hidden>
+    <div class="a11y__head">
+      <h2 class="a11y__title" id="a11yTitle" data-key="a11y.title">Настройки отображения</h2>
+      <button class="icon-btn" id="a11yClose" type="button" aria-label="Закрыть">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <fieldset class="a11y__group">
+      <legend data-key="a11y.theme">Тема оформления</legend>
+      <div class="seg seg--3" id="themeRadios">
+        <label><input type="radio" name="theme" value="dark"><span data-key="a11y.theme_dark">Тёмная</span></label>
+        <label><input type="radio" name="theme" value="light"><span data-key="a11y.theme_light">Светлая</span></label>
+        <label><input type="radio" name="theme" value="auto"><span data-key="a11y.theme_auto">Как в системе</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="a11y__group">
+      <legend data-key="a11y.font">Размер текста</legend>
+      <div class="a11y__font">
+        <button class="btn btn--ghost btn--sm" id="fsMinus" type="button" aria-label="Уменьшить текст">A−</button>
+        <button class="btn btn--ghost btn--sm" id="fsReset" type="button" aria-label="Обычный размер">A</button>
+        <button class="btn btn--ghost btn--sm" id="fsPlus" type="button" aria-label="Увеличить текст">A+</button>
+      </div>
+    </fieldset>
+
+    <label class="switch">
+      <input type="checkbox" id="contrastToggle">
+      <span class="switch__ui" aria-hidden="true"></span>
+      <span data-key="a11y.contrast">Высокая контрастность</span>
+    </label>
+    <label class="switch">
+      <input type="checkbox" id="motionToggle">
+      <span class="switch__ui" aria-hidden="true"></span>
+      <span data-key="a11y.motion">Отключить анимации</span>
+    </label>
+
+    <div class="a11y__foot">
+      <button class="btn btn--ghost btn--sm" id="a11yReset" type="button" data-key="a11y.reset">Сбросить настройки</button>
+      <p class="a11y__note" data-key="a11y.saved_note">Настройки сохраняются на этом устройстве.</p>
+    </div>
+  </div>
+
+  <main id="main" tabindex="-1">
+    <!-- HERO -->
+    <section class="hero container" id="top" aria-labelledby="heroTitle">
+      <div class="hero__content">
+        <p class="eyebrow" data-key="hero.eyebrow"></p>
+        <h1 class="hero__title" id="heroTitle"></h1>
+        <p class="hero__sub" data-key="hero.subtitle"></p>
+        <div class="hero__actions">
+          <a href="#contacts" class="btn btn--primary" data-lead data-key="hero.cta_primary">Обсудить задачу</a>
+          <a href="#calculator" class="btn btn--ghost" data-key="hero.cta_secondary">Попробовать калькулятор</a>
+        </div>
+        <ul class="trust" id="heroTrust"></ul>
+      </div>
+
+      <div class="hero__media">
+      <div class="hero__visual" id="heroVisual" role="img" aria-label="Декоративная 3D-иллюстрация: гайка с резьбовым стержнем и стеклянным кольцом">
+        <!-- Тёмная тема: объект без фона. Светлая тема: «витрина» (тёмная карточка) -->
+        <img class="hero__img hero__img--dark" src="assets/images/hero-3d.webp" alt="" decoding="async" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()">
+        <img class="hero__img hero__img--light" src="assets/images/hero-3d-stage.webp" alt="" loading="lazy" decoding="async" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()">
+        <div class="rig" aria-hidden="true">
+          <div class="rig__ring rig__ring--1"></div>
+          <div class="rig__ring rig__ring--2"></div>
+          <div class="rig__ring rig__ring--3"></div>
+          <div class="cube">
+            <div class="cube__face cube__face--f"></div>
+            <div class="cube__face cube__face--b"></div>
+            <div class="cube__face cube__face--l"></div>
+            <div class="cube__face cube__face--r"></div>
+            <div class="cube__face cube__face--t"></div>
+            <div class="cube__face cube__face--d"></div>
+            <div class="cube__core"></div>
+          </div>
+          <span class="rig__tag rig__tag--1">&lt;/&gt; bot</span>
+          <span class="rig__tag rig__tag--2">M8 · Ø12</span>
+          <span class="rig__tag rig__tag--3">смета → ₽</span>
+        </div>
+      </div>
+      <button class="btn btn--ghost btn--sm hero__3d" id="view3d" type="button" aria-pressed="false" data-key="hero.view3d">Покрутить в 3D</button>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats container" id="statsSection" aria-label="Коротко о главном">
+      <ul class="stats__list glass" id="statsList"></ul>
+    </section>
+
+    <!-- БОЛИ → РЕШЕНИЯ -->
+    <section class="section container" id="pains" aria-labelledby="painsTitle">
+      <div class="section__head reveal">
+        <p class="eyebrow" data-key="pains.eyebrow"></p>
+        <h2 class="section__title" id="painsTitle" data-key="pains.title"></h2>
+        <p class="section__lead" data-key="pains.lead"></p>
+      </div>
+      <ul class="pains" id="painsList"></ul>
+    </section>
+
+    <!-- ОБО МНЕ -->
+    <section class="section container" id="about" aria-labelledby="aboutTitle">
+      <div class="about">
+        <figure class="about__photo reveal" aria-hidden="false">
+          <div class="about__mono" aria-hidden="true">FC</div>
+          <img id="aboutImg" src="assets/images/me.jpg" alt="" onerror="this.remove()">
+        </figure>
+        <div class="about__body">
+          <div class="reveal">
+            <p class="eyebrow" data-key="about.eyebrow"></p>
+            <h2 class="section__title" id="aboutTitle" data-key="about.title"></h2>
+          </div>
+          <div class="about__text reveal" id="aboutParagraphs"></div>
+          <blockquote class="quote glass reveal"><p data-key="about.quote"></p></blockquote>
+        </div>
+      </div>
+      <ul class="points" id="aboutPoints"></ul>
+    </section>
+
+    <!-- УСЛУГИ -->
+    <section class="section container" id="services" aria-labelledby="servicesTitle">
+      <div class="section__head reveal">
+        <p class="eyebrow" data-key="services.eyebrow"></p>
+        <h2 class="section__title" id="servicesTitle" data-key="services.title"></h2>
+      </div>
+      <div class="services" id="servicesGrid"></div>
+    </section>
+
+    <!-- ПРИМЕРЫ -->
+    <section class="section container" id="cases" aria-labelledby="casesTitle">
+      <div class="section__head reveal">
+        <p class="eyebrow" data-key="cases.eyebrow"></p>
+        <h2 class="section__title" id="casesTitle" data-key="cases.title"></h2>
+        <p class="section__lead" data-key="cases.lead"></p>
+      </div>
+      <div class="cases" id="casesGrid"></div>
+    </section>
+
+    <!-- КАК РАБОТАЮ -->
+    <section class="section container" id="pipeline" aria-labelledby="pipelineTitle">
+      <div class="section__head reveal">
+        <p class="eyebrow" data-key="pipeline.eyebrow"></p>
+        <h2 class="section__title" id="pipelineTitle" data-key="pipeline.title"></h2>
+        <p class="section__lead" data-key="pipeline.subtitle"></p>
+      </div>
+      <div class="timeline" id="timeline">
+        <div class="timeline__line" aria-hidden="true"><div class="timeline__fill" id="timelineFill"></div></div>
+        <ol class="timeline__steps" id="timelineSteps" aria-label="Этапы работы"></ol>
+      </div>
+    </section>
+
+    <!-- КАЛЬКУЛЯТОР -->
+    <section class="section container" id="calculator" aria-labelledby="calcTitle">
+      <div class="calc glass">
+        <div class="calc__intro">
+          <p class="eyebrow" data-key="calculator.eyebrow"></p>
+          <h2 class="section__title" id="calcTitle" data-key="calculator.title"></h2>
+          <p class="section__lead" data-key="calculator.text"></p>
+          <a href="#contacts" class="btn btn--primary" data-lead data-lead-ctx="calc" data-key="calculator.labels.cta"></a>
+        </div>
+        <form class="calc__form" id="calcForm" onsubmit="return false" aria-label="Демо-калькулятор монтажа">
+          <div class="field">
+            <label class="field__label" for="calcWork" data-key="calculator.labels.work"></label>
+            <select id="calcWork" class="input"></select>
+          </div>
+          <div class="field">
+            <label class="field__label" for="calcQty"><span data-key="calculator.labels.qty"></span>: <b id="calcQtyOut">0</b> <span id="calcUnit"></span></label>
+            <input type="range" id="calcQty" class="range" min="1" max="100" value="10">
+          </div>
+          <fieldset class="field">
+            <legend class="field__label" data-key="calculator.labels.complexity"></legend>
+            <div class="seg" id="calcComplexity"></div>
+          </fieldset>
+          <label class="switch">
+            <input type="checkbox" id="calcMaterials" checked>
+            <span class="switch__ui" aria-hidden="true"></span>
+            <span data-key="calculator.labels.materials"></span>
+          </label>
+          <div class="calc__result">
+            <span class="calc__result-label" id="calcTotalLabel" data-key="calculator.labels.total"></span>
+            <output class="calc__total" id="calcTotal" for="calcWork calcQty calcComplexity calcMaterials" aria-labelledby="calcTotalLabel" aria-live="off">0</output>
+            <span class="calc__note" data-key="calculator.labels.note"></span>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ЦЕНЫ -->
+    <section class="section container" id="pricing" aria-labelledby="pricingTitle">
+      <div class="section__head reveal">
+        <p class="eyebrow" data-key="pricing.eyebrow"></p>
+        <h2 class="section__title" id="pricingTitle" data-key="pricing.title"></h2>
+        <p class="section__lead" data-key="pricing.note"></p>
+      </div>
+      <div class="pricing" id="pricingGrid"></div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section container" id="faq" aria-labelledby="faqTitle">
+      <div class="section__head reveal">
+        <p class="eyebrow" data-key="faq.eyebrow"></p>
+        <h2 class="section__title" id="faqTitle" data-key="faq.title"></h2>
+      </div>
+      <div class="faq" id="faqList"></div>
+    </section>
+
+    <!-- КОНТАКТЫ -->
+    <section class="section container" id="contacts" aria-labelledby="contactsTitle">
+      <div class="contacts glass reveal">
+        <img class="contacts__emblem" src="assets/images/logo-3d.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" onerror="this.remove()">
+        <p class="eyebrow" data-key="contacts.eyebrow"></p>
+        <h2 class="contacts__title" id="contactsTitle" data-key="contacts.title"></h2>
+        <p class="section__lead" data-key="contacts.text"></p>
+        <a class="btn btn--primary btn--lg" id="contactsCta" href="#contacts" data-lead></a>
+        <ul class="contacts__list" id="contactsList" aria-label="Способы связи"></ul>
+        <p class="contacts__a11y" data-key="contacts.accessible_note"></p>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="lead" id="leadDialog" aria-labelledby="leadTitle" aria-describedby="leadText">
+    <form class="lead__form" id="leadForm" novalidate>
+      <div class="lead__head">
+        <h2 class="lead__title" id="leadTitle" data-key="lead.title"></h2>
+        <button class="icon-btn lead__close" id="leadClose" type="button" aria-label="Закрыть">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <p class="lead__text" id="leadText" data-key="lead.text"></p>
+      <p class="lead__plan" id="leadPlan" hidden><span data-key="lead.plan_label"></span> <strong id="leadPlanName"></strong></p>
+      <div id="leadFields">
+        <label class="field"><span><span data-key="lead.contact"></span> <span class="req" aria-hidden="true">*</span></span>
+          <input class="input" id="leadContact" name="contact" type="text" autocomplete="tel" required maxlength="80" aria-describedby="leadErr"></label>
+        <label class="field"><span data-key="lead.name"></span>
+          <input class="input" id="leadName" name="name" type="text" autocomplete="name" maxlength="60"></label>
+        <label class="field"><span data-key="lead.message"></span>
+          <textarea class="input" id="leadMessage" name="message" rows="3" maxlength="800"></textarea></label>
+        <label class="field field--hp" aria-hidden="true"><input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+        <label class="check"><input type="checkbox" id="leadConsent" name="consent" required aria-describedby="leadErr"><span data-key="lead.consent"></span></label>
+        <p class="lead__err" id="leadErr" role="alert"></p>
+        <button class="btn btn--primary btn--lg lead__submit" id="leadSubmit" type="submit" data-key="lead.submit"></button>
+      </div>
+      <div class="lead__ok" id="leadOk" role="status" hidden tabindex="-1">
+        <h3 data-key="lead.success_title"></h3>
+        <p data-key="lead.success"></p>
+        <button class="btn btn--ghost" id="leadDone" type="button" data-key="lead.done"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span data-key="footer.copyright"></span>
+      <span data-key="footer.a11y_note"></span>
+      <span class="footer__made" data-key="footer.made"></span>
+    </div>
+  </footer>
+
+  <noscript><p class="noscript">Для работы сайта нужен JavaScript. Контакты: см. config.json.</p></noscript>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="config.js?v=2"></script>
+  <script src="js/app.js?v=7"></script>
+<script>
+/* Кнопка возврата в портфолио: не показывается, когда страница открыта внутри превью */
+if (window.self === window.top) {
+  var a = document.createElement('a');
+  a.href = '../index.html'; a.textContent = '← К портфолио'; a.setAttribute('aria-label', 'Вернуться в портфолио');
+  a.setAttribute('style', 'position:fixed;right:16px;bottom:16px;z-index:2147483000;padding:.65rem 1.1rem;border-radius:999px;background:#0f172a;color:#fff;font:600 14px/1 system-ui,sans-serif;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2)');
+  document.body.appendChild(a);
+}
+</script>
+</body>
+</html>

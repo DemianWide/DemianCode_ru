@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinTech Dashboard | Аналитика</title>
+    <!-- Подключаем Chart.js для графиков -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <style>
+        /* === ПЕРЕМЕННЫЕ И БАЗОВЫЕ НАСТРОЙКИ === */
+        :root {
+            --bg-body: #0b0f19;
+            --bg-panel: #151a28;
+            --bg-panel-hover: #1e2536;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: rgba(255, 255, 255, 0.05);
+            --border-light: rgba(255, 255, 255, 0.1);
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden; /* Блокируем общий скролл страницы */
+        }
+
+        /* === ГЛАВНАЯ СЕТКА ПРИЛОЖЕНИЯ === */
+        .app-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            grid-template-rows: 80px 1fr;
+            height: 100vh;
+        }
+
+        /* === САЙДБАР === */
+        .sidebar {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background-color: var(--bg-panel-hover);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: rgba(56, 189, 248, 0.1);
+            color: var(--accent);
+            border-left: 3px solid var(--accent);
+        }
+
+        /* Иконки в навигации (сделаны через эмодзи для простоты без внешних либ, но можно заменить на SVG) */
+        .nav-icon { font-size: 1.2rem; }
+
+        /* === ВЕРХНЯЯ ПАНЕЛЬ (HEADER) === */
+        .header {
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+            background-color: var(--bg-body);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-light);
+            border-radius: 99px;
+            padding: 10px 16px 10px 40px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-bar::before {
+            content: '🔍';
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name { font-weight: 600; font-size: 15px; }
+        .user-role { color: var(--text-muted); font-size: 13px; }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #fff;
+            border: 2px solid var(--bg-panel);
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* === ГЛАВНАЯ ОБЛАСТЬ (КОНТЕНТ) === */
+        .main-content {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+            padding: 32px;
+            overflow-y: auto; /* Скролл только для контента */
+        }
+
+        .dashboard-header {
+            margin-bottom: 24px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .dashboard-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Карточки сводки */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .summary-card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background-color: var(--accent);
+        }
+
+        .summary-card:nth-child(2)::before { background-color: var(--success); }
+        .summary-card:nth-child(3)::before { background-color: var(--danger); }
+
+        .card-title {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .card-amount {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .card-trend {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+
+        /* График и транзакции */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .chart-container, .transactions-container {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Настройки Canvas для графика */
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Таблица транзакций */
+        .tx-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tx-table th {
+            text-align: left;
+            padding-bottom: 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tx-table td {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .tx-table tr:last-child td {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .tx-desc { font-weight: 600; }
+        .tx-date { color: var(--text-muted); font-size: 12px; margin-top: 4px; }
+
+        .tx-status {
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-completed { background-color: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .status-pending { background-color: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+
+        /* === АДАПТИВНОСТЬ === */
+        @media (max-width: 1200px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 992px) {
+            .summary-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                grid-column: 1 / 2;
+                padding: 0 16px;
+            }
+            .main-content {
+                grid-column: 1 / 2;
+                padding: 16px;
+            }
+            .sidebar {
+                position: fixed;
+                left: -260px; /* Скрыто по умолчанию */
+                height: 100vh;
+                width: 260px;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .mobile-toggle {
+                display: block;
+            }
+            .search-bar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+
+        <!-- САЙДБАР -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                Fin<span>Dash</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-item active"><span class="nav-icon">📊</span> Дашборд</a></li>
+                <li><a href="fintech_transactions.html" class="nav-item"><span class="nav-icon">💸</span> Транзакции</a></li>
+                <li><a href="fintech_analytics.html" class="nav-item"><span class="nav-icon">📈</span> Аналитика</a></li>
+                <li><a href="fintech_cards.html" class="nav-item"><span class="nav-icon">💳</span> Карты</a></li>
+                <li style="margin-top: auto;"><a href="fintech_settings.html" class="nav-item"><span class="nav-icon">⚙️</span> Настройки</a></li>
+            </ul>
+        </aside>
+
+        <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
+        <header class="header">
+            <button class="mobile-toggle" id="menuBtn">☰</button>
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск транзакций...">
+            </div>
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-name">Дмитрий</div>
+                    <div class="user-role">Premium User</div>
+                </div>
+                <!-- Плейсхолдер аватарки (инициал) -->
+                <div class="avatar">Д</div>
+            </div>
+        </header>
+
+        <!-- ГЛАВНАЯ ОБЛАСТЬ -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1>Обзор финансов</h1>
+                <p>Ваша финансовая активность за последние 30 дней</p>
+            </div>
+
+            <!-- Карточки сводки -->
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="card-title">Общий баланс</div>
+                    <div class="card-amount">$24,562.00</div>
+                    <div class="card-trend trend-up">
+                        <span>↑ 12.5%</span> <span style="color: var(--text-muted)">к прошлому месяцу</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-title">Доходы</div>
+                    <div class="card-amount">$8,240.50</div>
+                    <div class="card-trend trend-up">
+                        <span>↑ 4.2%</span> <span style="color: var(--text-muted)">к прошлому месяцу</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="card-title">Расходы</div>
+                    <div class="card-amount">$3,420.20</div>
+                    <div class="card-trend trend-down">
+                        <span>↓ 1.8%</span> <span style="color: var(--text-muted)">к прошлому месяцу</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- График и Таблица -->
+            <div class="content-grid">
+
+                <!-- График -->
+                <div class="chart-container">
+                    <div class="section-title">
+                        Динамика доходов
+                        <span style="font-size: 13px; color: var(--text-muted); cursor: pointer;">За год ▼</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <!-- Canvas для Chart.js -->
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Транзакции -->
+                <div class="transactions-container">
+                    <div class="section-title">
+                        Последние транзакции
+                    </div>
+                    <table class="tx-table">
+                        <thead>
+                            <tr>
+                                <th>Детали</th>
+                                <th>Сумма</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="tx-desc">Stripe Payout</div>
+                                    <div class="tx-date">12 Октября, 14:30</div>
+                                </td>
+                                <td style="color: var(--success); font-weight: 600;">+$1,250.00</td>
+                                <td><span class="tx-status status-completed">Успешно</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tx-desc">AWS Cloud Services</div>
+                                    <div class="tx-date">10 Октября, 09:15</div>
+                                </td>
+                                <td>-$142.00</td>
+                                <td><span class="tx-status status-completed">Успешно</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tx-desc">Apple Store (MacBook)</div>
+                                    <div class="tx-date">08 Октября, 18:45</div>
+                                </td>
+                                <td>-$2,199.00</td>
+                                <td><span class="tx-status status-pending">В обработке</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="tx-desc">Upwork Escrow</div>
+                                    <div class="tx-date">05 Октября, 11:00</div>
+                                </td>
+                                <td style="color: var(--success); font-weight: 600;">+$850.00</td>
+                                <td><span class="tx-status status-completed">Успешно</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- === JAVASCRIPT ЛОГИКА === -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Мобильное меню (Sidebar Toggle)
+            const menuBtn = document.getElementById('menuBtn');
+            const sidebar = document.getElementById('sidebar');
+
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+
+            // Закрытие меню при клике вне его на мобильных
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(e.target) && e.target !== menuBtn) {
+                        sidebar.classList.remove('active');
+                    }
+                }
+            });
+
+            // 2. Инициализация графика (Chart.js)
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+
+            // Создаем красивый градиент для линии графика
+            let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(56, 189, 248, 0.4)'); // Верхняя часть (голубой прозрачный)
+            gradient.addColorStop(1, 'rgba(56, 189, 248, 0.0)'); // Нижняя часть (полностью прозрачный)
+
+            // Данные по месяцам
+            const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт'];
+            const dataValues = [1200, 1900, 1500, 2200, 1800, 2800, 2400, 3200, 2900, 4100];
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Доход ($)',
+                        data: dataValues,
+                        borderColor: '#38bdf8', // Цвет линии (accent)
+                        borderWidth: 3,
+                        backgroundColor: gradient, // Заливка под линией
+                        fill: true,
+                        tension: 0.4, // Плавность изгибов кривой
+                        pointBackgroundColor: '#0b0f19',
+                        pointBorderColor: '#38bdf8',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }, // Скрываем стандартную легенду
+                        tooltip: {
+                            backgroundColor: '#151a28',
+                            titleColor: '#94a3b8',
+                            bodyColor: '#f1f5f9',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+<script>
+/* Кнопка возврата в портфолио: не показывается, когда страница открыта внутри превью */
+if (window.self === window.top) {
+  var a = document.createElement('a');
+  a.href = '../index.html'; a.textContent = '← К портфолио'; a.setAttribute('aria-label', 'Вернуться в портфолио');
+  a.setAttribute('style', 'position:fixed;right:16px;bottom:16px;z-index:2147483000;padding:.65rem 1.1rem;border-radius:999px;background:#0f172a;color:#fff;font:600 14px/1 system-ui,sans-serif;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2)');
+  document.body.appendChild(a);
+}
+</script>
+<script>try{var ac=localStorage.getItem("fd-accent");if(ac){document.documentElement.style.setProperty("--accent",ac)}}catch(e){}</script>
+</body>
+</html>
