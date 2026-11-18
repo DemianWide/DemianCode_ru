@@ -1,0 +1,143 @@
+КАРТИНКИ ДЛЯ САЙТОВ В ПАПКАХ
+=============================
+
+СТИЛЬ ДЛЯ ВСЕХ ЗАПРОСОВ: 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures.
+Формат: квадрат 1:1. Фон ровный светло-серо-голубой (цвет #F1F5F9), чтобы картинки сливались со светлым интерфейсом StoreCRM.
+Без текста, логотипов и водяных знаков. Реальные бренды в запросах не используются намеренно (см. примечание внизу).
+
+----------------------------------------------------------------------
+САЙТ_1 — StoreCRM (нужно 5 картинок). Сохранить в сайт_1/img/
+----------------------------------------------------------------------
+
+1) avatar-owner.webp  (портрет владельца магазина; на сайте показывается маленьким кружком 42 px)
+
+Photorealistic head-and-shoulders portrait of a friendly, confident man in his early 30s, owner of a small online electronics store, short dark hair, light stubble, calm natural smile, wearing a dark navy casual overshirt over a white t-shirt, soft window key light with gentle fill, neutral light gray-blue seamless background (#F1F5F9), 85mm portrait lens look, shallow depth of field, ultra-detailed skin with visible pores and natural subsurface scattering, living eyes with realistic catchlights, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, no text, no logos, square 1:1
+
+2) product-headphones.webp  (товар №1 в «Лидерах продаж»)
+
+Premium wireless over-ear noise-cancelling headphones in matte graphite black, soft protein-leather ear cushions with visible fine stitching, brushed metal hinge sliders, slightly angled three-quarter view floating above a seamless pale gray-blue studio backdrop (#F1F5F9), soft studio lighting from the upper left, subtle contact shadow and gentle reflections, product centered with 15 percent margin, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, physically based materials, no text, no logos, no watermark, square 1:1
+
+3) product-keyboard.webp  (товар №2)
+
+Compact 75 percent wireless mechanical keyboard with a brushed aluminum space-gray frame, light-gray PBT keycaps with fine micro-texture and a few indigo accent keys (#4F46E5), no legends on the keys, shot from an elevated three-quarter angle on a seamless pale gray-blue studio backdrop (#F1F5F9), soft studio lighting, crisp subtle shadow, keyboard centered with 15 percent margin, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, physically based materials, no text, no logos, no watermark, square 1:1
+
+4) product-watch.webp  (товар №3)
+
+Modern smartwatch with a rounded-square midnight aluminum case, a bright sharp always-on display showing a clean minimal analog watch face with no brand text, dark woven sport band gently curled, resting at a slight three-quarter angle on a seamless pale gray-blue studio backdrop (#F1F5F9), soft studio lighting, delicate reflections on the glass, subtle contact shadow, product centered with 15 percent margin, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, physically based materials, no text, no logos, no watermark, square 1:1
+
+5) product-earbuds.webp  (товар №4)
+
+Pair of true wireless earbuds with glossy white finish and soft silicone tips, resting beside their open pill-shaped charging case with a tiny warm-white status LED, arranged as a balanced still life on a seamless pale gray-blue studio backdrop (#F1F5F9), soft studio lighting, accurate glossy highlights and micro scratches-free surfaces, subtle contact shadows, composition centered with 15 percent margin, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, physically based materials, no text, no logos, no watermark, square 1:1
+
+
+----------------------------------------------------------------------
+САЙТ_2 — FinDash
+----------------------------------------------------------------------
+Картинки не нужны: в коде нет ни одного фото (значки сделаны эмодзи, аватар это буква «Д»).
+Если захотите добавить для выразительности, скажите: подключу аватар и иллюстрацию карты,
+и я допишу запросы в том же стиле.
+
+
+----------------------------------------------------------------------
+ПОРТФОЛИО (для информации)
+----------------------------------------------------------------------
+assets/img/me.jpg                  ваше реальное фото, 4:5
+assets/img/work-fieldcode.webp     скриншот 16:10 (например 1600x1000)
+assets/img/work-storecrm.webp      скриншот 16:10
+assets/img/work-findash.webp       скриншот 16:10
+Скриншоты лучше делать с реальных страниц в браузере (Win+Shift+S), а не генерировать.
+
+
+ПРИМЕЧАНИЕ О БРЕНДАХ
+В подписях товаров на странице сейчас стоят вымышленные названия (Aura, Forma, Pulse). Фото без логотипов
+с такими подписями не совпадут. Для портфолио лучше заменить названия на нейтральные
+(например «Беспроводные наушники Aura», «Механическая клавиатура K75»). Могу заменить за вас.
+
+
+======================================================================
+КАРТОЧКИ ДЛЯ КРАСОТЫ
+======================================================================
+Стиль для всех запросов: 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures.
+Без текста, цифр, логотипов и водяных знаков: надписи на картах рисует сайт, на картинке они не нужны.
+
+
+----------------------------------------------------------------------
+1. ФОНЫ БАНКОВСКИХ КАРТ FINDASH (3 файла) -> сайт_2/img/
+   Формат: горизонтальный, 1600x1010 (пропорции банковской карты 1.586:1), WebP.
+   Страница уже умеет их подхватывать: положили файл с нужным именем, и он лёг под надписи.
+   Совет: слева и снизу оставляйте спокойную зону, там будут номер и имя.
+----------------------------------------------------------------------
+
+card-1.webp (основная, голубая)
+
+Abstract premium bank card background, flowing liquid glass waves in deep ocean blue and electric cyan, soft caustic light refractions, subtle anodized metal micro-grain, a bright specular highlight sweeping across the upper right corner, calm dark area in the lower left for text, shallow depth of field, ultra-smooth gradients with realistic physically based glass and metal materials, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, no text, no numbers, no logos, horizontal 1.586:1
+
+card-2.webp (для поездок, фиолетовая)
+
+Abstract premium bank card background, silky draped satin fabric folds in deep violet and indigo with faint magenta rim light, fine woven thread texture visible up close, soft volumetric glow from the top right, darker calm area at the bottom left for text, elegant luxury feel, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, no text, no numbers, no logos, horizontal 1.586:1
+
+card-3.webp (виртуальная, зелёная)
+
+Abstract premium bank card background, polished emerald stone with fine gold veining and a translucent crystalline surface, deep green to dark teal gradient, soft internal glow and crisp specular edges, a quiet dark area in the lower left for text, rich luxurious materials, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, no text, no numbers, no logos, horizontal 1.586:1
+
+
+----------------------------------------------------------------------
+2. ОБЛОЖКИ РАБОТ НА ГЛАВНОЙ ПОРТФОЛИО (3 файла) -> assets/img/
+   Файлы: work-fieldcode.webp, work-storecrm.webp, work-findash.webp, 1600x1000.
+----------------------------------------------------------------------
+Лучше всего здесь не генерация, а настоящий скриншот страницы: нейросеть плохо рисует
+читаемый интерфейс, и текст на такой картинке получится кашей. Сделайте скриншот (Win+Shift+S)
+в браузере на широком окне, затем при желании положите его на красивый фон из запроса ниже.
+
+Фон-подложка под скриншот (один на все три, меняйте только цвет):
+
+Seamless soft studio backdrop for a UI screenshot presentation, a smooth dark charcoal surface with a faint lime-green rim light glowing from the bottom edge and subtle volumetric haze, fine film grain, a clean empty center area for a browser window, premium product-shot mood, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, no text, no logos, horizontal 16:10
+
+Для StoreCRM замените «lime-green» на «indigo», для FinDash на «cyan».
+
+
+----------------------------------------------------------------------
+3. КАРТИНКА ДЛЯ ПРЕВЬЮ ССЫЛКИ (когда кидаете сайт в Telegram) -> assets/img/og-cover.jpg
+   Формат 1200x630, JPG.
+----------------------------------------------------------------------
+Dark premium cover background for a developer portfolio, a glowing lime-green accent light arc across a deep black surface, faint grid lines fading into the distance, soft particles in the air, large clean empty space on the left for a title, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, no text, no logos, horizontal 1.91:1
+
+Поверх сами добавите в Figma: имя, должность и «Сайты для бригад и мастеров». Потом в index.html и project.html
+добавьте в <head> строки <meta property="og:image" content="https://ВАШ-САЙТ/assets/img/og-cover.jpg"> и <meta property="og:title" ...>.
+(Если нужно, добавлю их за вас, скажите.)
+
+
+----------------------------------------------------------------------
+4. СВОЁ ФОТО -> assets/img/me.jpg
+----------------------------------------------------------------------
+Здесь нужна настоящая фотография, не сгенерированная. Клиентам-бригадам важно видеть живого человека, и фото в рабочей
+одежде или с инструментом убедительнее любой картинки. Вертикальный кадр 4:5, ровный дневной свет, фон без лишнего.
+
+
+----------------------------------------------------------------------
+5. ВАШЕ ФОТО ЧЕРЕЗ ИИ (улучшение своей фотографии) -> assets/img/me.jpg
+   Формат 4:5 (например 1600x2000), JPG или WebP.
+----------------------------------------------------------------------
+Как делать: загрузите свою реальную фотографию в нейросеть, которая умеет редактировать по образцу
+(режим «изображение + текст», image-to-image), и вставьте запрос ниже. Фото берите чёткое, лицо крупно, свет ровный,
+без очков-тёмных и кепки на глаза. Чем лучше исходник, тем похожее результат.
+
+Главное правило: лицо должно остаться вашим. Меняем одежду, свет и фон, но не черты лица, возраст и фигуру. Клиенты
+встретятся с вами вживую или по видео, и расхождение сразу подорвёт доверие. Если результат стал «не похож на вас»,
+повторите с пониженной силой изменения (strength 0.3–0.5) или используйте только улучшение света и фона.
+
+Вариант А. В рабочем образе монтажника (лучше всего продаёт вашу историю):
+
+Edit this photo: keep the person's face, facial features, skin tone, hairstyle, age and body proportions exactly identical to the original. Change only the clothing to a clean dark work jacket over a plain t-shirt, with a small tool belt, and the background to a softly blurred modern workshop or clean interior with warm daylight. Natural confident half-smile, soft key light from the left, gentle fill, 85mm portrait lens look, shallow depth of field, ultra-detailed realistic skin with visible pores and natural subsurface scattering, living eyes with realistic catchlights, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, vertical 4:5, no text, no logos, no watermark
+
+Вариант Б. Деловой образ (для резюме и hh):
+
+Edit this photo: keep the person's face, facial features, skin tone, hairstyle, age and body proportions exactly identical to the original. Change only the clothing to a dark navy casual overshirt over a white t-shirt and the background to a clean neutral dark gray studio backdrop with a faint lime-green rim light. Soft window key light, calm natural expression, 85mm portrait lens look, ultra-detailed realistic skin, living eyes with realistic catchlights, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, vertical 4:5, no text, no logos, no watermark
+
+Вариант В. Только улучшить исходник, ничего не меняя в образе:
+
+Enhance this photo without changing the person: keep the face, expression, clothing and pose identical. Improve lighting to soft natural daylight, clean up the background into a gently blurred neutral setting, correct color and sharpness, preserve realistic skin texture with visible pores, no beauty-filter smoothing, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, vertical 4:5, no text, no watermark
+
+Что не делать: не просите «сделать красивее», «моложе» или «стройнее» — это тот самый случай, когда фото перестаёт быть вами.
+Готовый файл положите в assets/img/me.jpg, и сайт покажет его вместо буквы «Д». Фото в рабочей одежде можно также использовать
+в соцсетях и в профиле Kwork или Профи.

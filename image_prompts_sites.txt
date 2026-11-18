@@ -1,0 +1,54 @@
+КАРТИНКИ ДЛЯ САЙТОВ В ПАПКАХ
+=============================
+
+СТИЛЬ ДЛЯ ВСЕХ ЗАПРОСОВ: 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures.
+Формат: квадрат 1:1. Фон ровный светло-серо-голубой (цвет #F1F5F9), чтобы картинки сливались со светлым интерфейсом StoreCRM.
+Без текста, логотипов и водяных знаков. Реальные бренды в запросах не используются намеренно (см. примечание внизу).
+
+----------------------------------------------------------------------
+САЙТ_1 — StoreCRM (нужно 5 картинок). Сохранить в сайт_1/img/
+----------------------------------------------------------------------
+
+1) avatar-owner.webp  (портрет владельца магазина; на сайте показывается маленьким кружком 42 px)
+
+Photorealistic head-and-shoulders portrait of a friendly, confident man in his early 30s, owner of a small online electronics store, short dark hair, light stubble, calm natural smile, wearing a dark navy casual overshirt over a white t-shirt, soft window key light with gentle fill, neutral light gray-blue seamless background (#F1F5F9), 85mm portrait lens look, shallow depth of field, ultra-detailed skin with visible pores and natural subsurface scattering, living eyes with realistic catchlights, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, no text, no logos, square 1:1
+
+2) product-headphones.webp  (товар №1 в «Лидерах продаж»)
+
+Premium wireless over-ear noise-cancelling headphones in matte graphite black, soft protein-leather ear cushions with visible fine stitching, brushed metal hinge sliders, slightly angled three-quarter view floating above a seamless pale gray-blue studio backdrop (#F1F5F9), soft studio lighting from the upper left, subtle contact shadow and gentle reflections, product centered with 15 percent margin, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, physically based materials, no text, no logos, no watermark, square 1:1
+
+3) product-keyboard.webp  (товар №2)
+
+Compact 75 percent wireless mechanical keyboard with a brushed aluminum space-gray frame, light-gray PBT keycaps with fine micro-texture and a few indigo accent keys (#4F46E5), no legends on the keys, shot from an elevated three-quarter angle on a seamless pale gray-blue studio backdrop (#F1F5F9), soft studio lighting, crisp subtle shadow, keyboard centered with 15 percent margin, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, physically based materials, no text, no logos, no watermark, square 1:1
+
+4) product-watch.webp  (товар №3)
+
+Modern smartwatch with a rounded-square midnight aluminum case, a bright sharp always-on display showing a clean minimal analog watch face with no brand text, dark woven sport band gently curled, resting at a slight three-quarter angle on a seamless pale gray-blue studio backdrop (#F1F5F9), soft studio lighting, delicate reflections on the glass, subtle contact shadow, product centered with 15 percent margin, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, physically based materials, no text, no logos, no watermark, square 1:1
+
+5) product-earbuds.webp  (товар №4)
+
+Pair of true wireless earbuds with glossy white finish and soft silicone tips, resting beside their open pill-shaped charging case with a tiny warm-white status LED, arranged as a balanced still life on a seamless pale gray-blue studio backdrop (#F1F5F9), soft studio lighting, accurate glossy highlights and micro scratches-free surfaces, subtle contact shadows, composition centered with 15 percent margin, 8K, ultra, Unreal Engine 5 quality, super perfect almost-living photoreal textures, physically based materials, no text, no logos, no watermark, square 1:1
+
+
+----------------------------------------------------------------------
+САЙТ_2 — FinDash
+----------------------------------------------------------------------
+Картинки не нужны: в коде нет ни одного фото (значки сделаны эмодзи, аватар это буква «Д»).
+Если захотите добавить для выразительности, скажите: подключу аватар и иллюстрацию карты,
+и я допишу запросы в том же стиле.
+
+
+----------------------------------------------------------------------
+ПОРТФОЛИО (для информации)
+----------------------------------------------------------------------
+assets/img/me.jpg                  ваше реальное фото, 4:5
+assets/img/work-fieldcode.webp     скриншот 16:10 (например 1600x1000)
+assets/img/work-storecrm.webp      скриншот 16:10
+assets/img/work-findash.webp       скриншот 16:10
+Скриншоты лучше делать с реальных страниц в браузере (Win+Shift+S), а не генерировать.
+
+
+ПРИМЕЧАНИЕ О БРЕНДАХ
+В подписях товаров на странице сейчас стоят вымышленные названия (Aura, Forma, Pulse). Фото без логотипов
+с такими подписями не совпадут. Для портфолио лучше заменить названия на нейтральные
+(например «Беспроводные наушники Aura», «Механическая клавиатура K75»). Могу заменить за вас.

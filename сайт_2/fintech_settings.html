@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinDash | Настройки</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">Fin<span>Dash</span></div>
+    <nav aria-label="Разделы"><ul class="nav-menu">
+        <li><a href="fintech_dashboard.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📊</span> Дашборд</a></li>
+        <li><a href="fintech_transactions.html" class="nav-item"><span class="nav-icon" aria-hidden="true">💸</span> Транзакции</a></li>
+        <li><a href="fintech_analytics.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📈</span> Аналитика</a></li>
+        <li><a href="fintech_cards.html" class="nav-item"><span class="nav-icon" aria-hidden="true">💳</span> Карты</a></li>
+        <li style="margin-top: auto;"><a href="fintech_settings.html" class="nav-item active" aria-current="page"><span class="nav-icon" aria-hidden="true">⚙️</span> Настройки</a></li>
+    </ul></nav>
+  </aside>
+  <header class="header">
+    <button class="mobile-toggle" id="menuBtn" type="button">☰</button>
+    <div class="search-bar"><input type="text" id="globalSearch" placeholder="Поиск транзакций..."></div>
+    <div class="user-profile"><div class="user-info"><div class="user-name">Дмитрий</div><div class="user-role">Premium User</div></div><div class="avatar" aria-hidden="true">Д</div></div>
+  </header>
+  <main class="main-content" id="main">
+    <div class="dashboard-header"><h1>Настройки</h1><p>Профиль, безопасность и внешний вид</p></div>
+
+    <form id="sf" class="grid-2" style="align-items:start" novalidate>
+      <div style="display:grid;gap:24px">
+        <section class="panel" aria-labelledby="s1"><div class="panel-head"><h2 id="s1">Профиль</h2></div><div class="form-grid">
+          <div class="field"><label for="nm">Имя</label><input class="input" id="nm" name="nm" value="Дмитрий" autocomplete="given-name"><div class="err" role="alert"></div></div>
+          <div class="field"><label for="ml">Почта</label><input class="input" id="ml" name="ml" type="email" value="dmitry@example.com" autocomplete="email"><div class="err" role="alert"></div></div>
+          <div class="field"><label for="cu">Валюта отображения</label><select class="select" id="cu" name="cu"><option>USD ($)</option><option>EUR (€)</option><option>RUB (₽)</option></select></div>
+          <div class="field"><label for="lg">Язык</label><select class="select" id="lg" name="lg"><option>Русский</option><option>English</option></select></div></div></section>
+        <section class="panel" aria-labelledby="s2"><div class="panel-head"><h2 id="s2">Безопасность</h2></div>
+          <div class="opt"><div><b>Двухфакторная защита</b><span class="d">Код из приложения при входе</span></div><label class="switch"><input type="checkbox" name="f2" checked><i></i><span class="sr">Двухфакторная защита</span></label></div>
+          <div class="opt"><div><b>Вход по отпечатку</b><span class="d">На телефоне</span></div><label class="switch"><input type="checkbox" name="bio" checked><i></i><span class="sr">Вход по отпечатку</span></label></div>
+          <div class="opt"><div><b>Сообщать о новых входах</b><span class="d">Уведомление при входе с нового устройства</span></div><label class="switch"><input type="checkbox" name="al" checked><i></i><span class="sr">Сообщать о новых входах</span></label></div>
+          <div style="padding-top:18px;border-top:1px solid var(--border)"><button class="btn btn--ghost" id="out" type="button">Выйти на всех устройствах</button></div></section>
+      </div>
+      <div style="display:grid;gap:24px">
+        <section class="panel" aria-labelledby="s3"><div class="panel-head"><h2 id="s3">Цвет акцента</h2></div><p class="muted" style="font-size:14px;margin-bottom:16px">Применяется ко всем страницам FinDash сразу.</p><div class="swatches" id="sw" role="group" aria-label="Цвет акцента"></div></section>
+        <section class="panel" aria-labelledby="s4"><div class="panel-head"><h2 id="s4">Уведомления</h2></div>
+          <div class="opt"><div><b>Крупные операции</b><span class="d">Свыше $500</span></div><label class="switch"><input type="checkbox" name="big" checked><i></i><span class="sr">Крупные операции</span></label></div>
+          <div class="opt"><div><b>Итоги недели</b><span class="d">Каждый понедельник</span></div><label class="switch"><input type="checkbox" name="wk"><i></i><span class="sr">Итоги недели</span></label></div></section>
+        <section class="panel" aria-labelledby="s5"><div class="panel-head"><h2 id="s5">Сохранение</h2></div><p class="muted" style="font-size:14px;margin-bottom:16px">Настройки хранятся в этом браузере.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn--primary" type="submit">Сохранить</button><button class="btn btn--ghost" type="button" id="rs">Сбросить</button></div></section>
+      </div>
+    </form>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script>
+
+document.body.dataset.search = '';
+var KEY = 'fd-settings-v1', F = $('#sf'), SW = [['#38bdf8', 'Небесный'], ['#34d399', 'Изумруд'], ['#a78bfa', 'Аметист'], ['#fb923c', 'Янтарь'], ['#f472b6', 'Роза']], accent = '#38bdf8';
+try { accent = localStorage.getItem('fd-accent') || accent; } catch (e) {}
+function setAccent(c) { accent = c; document.documentElement.style.setProperty('--accent', c); document.documentElement.style.setProperty('--accent-hover', c); $$('#sw button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.c === c)); }); }
+$('#sw').innerHTML = SW.map(function (s) { return '<button type="button" data-c="' + s[0] + '" style="background:' + s[0] + '" aria-label="' + s[1] + '" aria-pressed="false"></button>'; }).join('');
+$$('#sw button').forEach(function (b) { b.onclick = function () { setAccent(b.dataset.c); try { localStorage.setItem('fd-accent', accent); } catch (e) {} toast('Цвет акцента изменён'); }; });
+setAccent(accent);
+var def = {}; Array.prototype.forEach.call(F.elements, function (e) { if (e.name) def[e.name] = e.type === 'checkbox' ? e.checked : e.value; });
+try { var v0 = JSON.parse(localStorage.getItem(KEY) || 'null'); if (v0) Array.prototype.forEach.call(F.elements, function (e) { if (e.name in v0) { if (e.type === 'checkbox') e.checked = !!v0[e.name]; else e.value = v0[e.name]; } }); } catch (e) {}
+function bad(el, m) { el.setAttribute('aria-invalid', 'true'); el.parentNode.querySelector('.err').textContent = m; } function good(el) { el.removeAttribute('aria-invalid'); el.parentNode.querySelector('.err').textContent = ''; }
+F.addEventListener('submit', function (e) {
+  e.preventDefault(); var nm = $('#nm'), ml = $('#ml'), ok = true, first = null; good(nm); good(ml);
+  if (nm.value.trim().length < 2) { bad(nm, 'Введите имя'); ok = false; first = nm; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ml.value.trim())) { bad(ml, 'Проверьте почту, например name@mail.ru'); ok = false; first = first || ml; }
+  if (!ok) { first.focus(); toast('Исправьте отмеченные поля'); return; }
+  var v = {}; Array.prototype.forEach.call(F.elements, function (x) { if (x.name) v[x.name] = x.type === 'checkbox' ? x.checked : x.value; });
+  try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (x) {} toast('Настройки сохранены');
+});
+$('#rs').onclick = function () { Array.prototype.forEach.call(F.elements, function (x) { if (x.name in def) { if (x.type === 'checkbox') x.checked = def[x.name]; else x.value = def[x.name]; } }); good($('#nm')); good($('#ml')); setAccent('#38bdf8'); try { localStorage.removeItem(KEY); localStorage.removeItem('fd-accent'); } catch (x) {} toast('Настройки сброшены'); };
+$('#out').onclick = function () { toast('Вы вышли на всех устройствах, кроме этого'); };
+
+</script>
+</body>
+</html>

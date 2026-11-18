@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinDash | Карты</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body data-search="">
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">Fin<span>Dash</span></div>
+    <nav aria-label="Разделы"><ul class="nav-menu">
+        <li><a href="fintech_dashboard.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📊</span> Дашборд</a></li>
+        <li><a href="fintech_transactions.html" class="nav-item"><span class="nav-icon" aria-hidden="true">💸</span> Транзакции</a></li>
+        <li><a href="fintech_analytics.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📈</span> Аналитика</a></li>
+        <li><a href="fintech_cards.html" class="nav-item active" aria-current="page"><span class="nav-icon" aria-hidden="true">💳</span> Карты</a></li>
+        <li style="margin-top: auto;"><a href="fintech_settings.html" class="nav-item"><span class="nav-icon" aria-hidden="true">⚙️</span> Настройки</a></li>
+    </ul></nav>
+  </aside>
+  <header class="header">
+    <button class="mobile-toggle" id="menuBtn" type="button">☰</button>
+    <div class="search-bar"><input type="text" id="globalSearch" placeholder="Поиск транзакций..."></div>
+    <div class="user-profile"><div class="user-info"><div class="user-name">Дмитрий</div><div class="user-role">Premium User</div></div><div class="avatar" aria-hidden="true">Д</div></div>
+  </header>
+  <main class="main-content" id="main">
+    <div class="dashboard-header"><h1>Мои карты</h1><p>Выберите карту и управляйте ею</p></div>
+
+    <div class="cards" id="cards" role="group" aria-label="Выберите карту"></div>
+    <div class="grid-eq">
+      <section class="panel" aria-labelledby="t1"><div class="panel-head"><h2 id="t1">Управление картой</h2><span class="muted" id="selName"></span></div>
+        <div class="opt"><div><b>Заморозить карту</b><span class="d">Платежи будут отклоняться, пока вы не включите её обратно</span></div><label class="switch"><input type="checkbox" id="frz"><i></i><span class="sr">Заморозить карту</span></label></div>
+        <div class="opt"><div><b>Платежи в интернете</b><span class="d">Покупки в онлайн-магазинах</span></div><label class="switch"><input type="checkbox" id="onl"><i></i><span class="sr">Платежи в интернете</span></label></div>
+        <div class="opt"><div><b>Бесконтактная оплата</b><span class="d">Приложить к терминалу</span></div><label class="switch"><input type="checkbox" id="ctl"><i></i><span class="sr">Бесконтактная оплата</span></label></div>
+        <div style="padding-top:18px;border-top:1px solid var(--border)"><div style="display:flex;justify-content:space-between;font-weight:600;margin-bottom:10px"><label for="lim">Дневной лимит</label><span id="limV"></span></div><input type="range" id="lim" min="100" max="5000" step="100"><div class="muted" style="font-size:13px;margin-top:6px">Покупки выше лимита за день будут отклонены</div></div>
+        <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn--ghost" id="flip" type="button">Показать CVV</button><button class="btn btn--primary" id="copy" type="button">Скопировать номер</button></div></section>
+      <section class="panel" aria-labelledby="t2"><div class="panel-head"><h2 id="t2">Последние операции по карте</h2></div><div class="table-wrap"><table class="data"><tbody id="ops"></tbody></table></div><div class="empty" id="none" hidden>По этой карте пока нет операций.</div></section>
+    </div>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script>
+
+document.body.dataset.search = '1';
+var K = 'fd-cards-v1';
+var C = [{ id: 0, g: 'g1', brand: 'VISA', num: '4417 8800 2316 4417', last: '4417', exp: '09/29', cvv: '482', name: 'Основная', frz: false, onl: true, ctl: true, lim: 2000 },
+  { id: 1, g: 'g2', brand: 'Mastercard', num: '5520 1043 7788 9082', last: '9082', exp: '03/28', cvv: '913', name: 'Для поездок', frz: false, onl: true, ctl: true, lim: 1500 },
+  { id: 2, g: 'g3', brand: 'Virtual', num: '4000 2299 6511 1203', last: '1203', exp: '12/27', cvv: '107', name: 'Для подписок', frz: false, onl: true, ctl: false, lim: 300 }];
+try { var sv = JSON.parse(localStorage.getItem(K) || 'null'); if (sv && sv.length === 3) C = sv; } catch (e) {}
+var OPS = { '4417': [['Stripe Payout', 2450], ['Пятёрочка', -64.2], ['Аренда квартиры', -650], ['Аптека 36,6', -41.3], ['Стоматология', -180]], '9082': [['Яндекс Такси', -18.5], ['Кинотеатр «Формула Кино»', -22], ['ВкусВилл', -38.75], ['Метро: пополнение', -25]], '1203': [['Netflix', -15.99], ['Spotify', -9.99], ['Steam', -29.99]] };
+var sel = 0, flipped = false;
+function save() { try { localStorage.setItem(K, JSON.stringify(C)); } catch (e) {} }
+function build() {
+  $('#cards').innerHTML = C.map(function (c) {
+    return '<button type="button" class="cardsel" data-i="' + c.id + '" aria-pressed="' + (c.id === sel) + '" aria-label="' + c.brand + ' •• ' + c.last + ', ' + c.name + (c.frz ? ', заморожена' : '') + '"><div class="cc ' + (c.frz ? 'is-frozen' : '') + '" id="cc' + c.id + '">' +
+      '<div class="face ' + c.g + '"><div class="row"><span>' + c.name + '</span><b>' + c.brand + '</b></div><div class="chipic"></div><div class="num16">•••• •••• •••• ' + c.last + '</div><div class="row"><div><small>Владелец</small>DMITRY</div><div><small>Срок</small>' + c.exp + '</div></div></div>' +
+      '<div class="face back ' + c.g + '"><div class="stripe"></div><div class="cvv" aria-label="CVV">' + c.cvv + '</div><div style="font-size:12px;opacity:.8">Номер: ' + c.num + '</div></div><div class="frozen"></div></div></button>';
+  }).join('');
+  $$('.cardsel').forEach(function (b) {
+    b.onclick = function () { sel = +b.dataset.i; flipped = false; $('#flip').textContent = 'Показать CVV'; $$('.cc').forEach(function (x) { x.classList.remove('flip'); }); $$('.cardsel').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); panel(); };
+    b.addEventListener('pointermove', function (e) { var r = b.getBoundingClientRect(), cc = b.firstChild; cc.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 14).toFixed(1) + 'deg'); cc.style.setProperty('--rx', (-((e.clientY - r.top) / r.height - .5) * 12).toFixed(1) + 'deg'); });
+    b.addEventListener('pointerleave', function () { b.firstChild.style.setProperty('--ry', '0deg'); b.firstChild.style.setProperty('--rx', '0deg'); });
+  });
+}
+function panel() {
+  var c = C[sel]; $('#selName').textContent = c.brand + ' •• ' + c.last;
+  $('#frz').checked = c.frz; $('#onl').checked = c.onl; $('#ctl').checked = c.ctl; $('#lim').value = c.lim; $('#limV').textContent = usd(c.lim).replace('.00', '');
+  var o = OPS[c.last] || []; $('#ops').innerHTML = o.map(function (x) { return '<tr style="cursor:default"><td>' + x[0] + '</td><td class="num ' + (x[1] > 0 ? 'plus' : 'minus') + '">' + usd(x[1], true) + '</td></tr>'; }).join(''); $('#none').hidden = o.length > 0;
+}
+function bind(id, key, msg) { $(id).onchange = function () { C[sel][key] = this.checked; save(); $('#cc' + sel).classList.toggle('is-frozen', C[sel].frz); var b = $('.cardsel[data-i="' + sel + '"]'); if (key === 'frz') b.setAttribute('aria-label', C[sel].brand + ' •• ' + C[sel].last + ', ' + C[sel].name + (C[sel].frz ? ', заморожена' : '')); toast(msg(this.checked)); }; }
+bind('#frz', 'frz', function (v) { return v ? 'Карта заморожена' : 'Карта снова активна'; });
+bind('#onl', 'onl', function (v) { return v ? 'Онлайн-платежи включены' : 'Онлайн-платежи выключены'; });
+bind('#ctl', 'ctl', function (v) { return v ? 'Бесконтактная оплата включена' : 'Бесконтактная оплата выключена'; });
+$('#lim').oninput = function () { C[sel].lim = +this.value; $('#limV').textContent = usd(C[sel].lim).replace('.00', ''); };
+$('#lim').onchange = function () { save(); toast('Лимит ' + usd(C[sel].lim).replace('.00', '') + ' в день'); };
+$('#flip').onclick = function () { flipped = !flipped; $('#cc' + sel).classList.toggle('flip', flipped); this.textContent = flipped ? 'Скрыть CVV' : 'Показать CVV'; };
+$('#copy').onclick = function () { var n = C[sel].num; (navigator.clipboard ? navigator.clipboard.writeText(n) : Promise.reject()).then(function () { toast('Номер карты скопирован'); }, function () { toast('Не удалось скопировать, выделите номер вручную'); }); };
+build(); panel();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StoreCRM | Выплаты</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body data-page="payouts">
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="logo">Store<span>CRM</span></div>
+    <nav aria-label="Разделы"><ul class="nav-menu">
+      <li><a href="e_commerce_dashboard.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📊</span> Дашборд</a></li>
+      <li><a href="e_commerce_crm.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📦</span> Заказы</a></li>
+      <li><a href="e_commerce_clients.html" class="nav-item"><span class="nav-icon" aria-hidden="true">👥</span> Клиенты</a></li>
+      <li><a href="e_commerce_analytics.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📈</span> Аналитика</a></li>
+      <li><a href="e_commerce_payouts.html" class="nav-item active" aria-current="page"><span class="nav-icon" aria-hidden="true">💳</span> Выплаты</a></li>
+      <li style="margin-top: auto;"><a href="e_commerce_settings.html" class="nav-item"><span class="nav-icon" aria-hidden="true">⚙️</span> Настройки</a></li>
+    </ul></nav>
+  </aside>
+  <header class="header">
+    <div class="page-title">Выплаты</div>
+    <div class="header-actions">
+      <div class="search-box"><input type="text" id="globalSearch" placeholder="Поиск по клиентам..."></div>
+      <div class="user-profile">
+        <div class="user-info"><div class="user-name">Дмитрий</div><div class="user-role">Владелец магазина</div></div>
+        <img src="img/avatar-owner.webp" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&amp;w=150&amp;auto=format&amp;fit=crop'" alt="Дмитрий, владелец магазина" class="avatar">
+      </div>
+    </div>
+  </header>
+  <main class="dashboard-container" id="main">
+
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-header"><div class="metric-icon icon-emerald" aria-hidden="true">💰</div></div><div class="balance-big" id="bAvail">—</div><div class="metric-title">Доступно к выводу</div><button class="btn btn--primary" id="ask" type="button" style="margin-top:18px">Запросить выплату</button></div>
+      <div class="metric-card"><div class="metric-header"><div class="metric-icon icon-amber" aria-hidden="true">⏳</div><div class="metric-trend trend-up">в пути</div></div><div class="metric-value" id="bWait">—</div><div class="metric-title">В обработке</div></div>
+      <div class="metric-card"><div class="metric-header"><div class="metric-icon icon-indigo" aria-hidden="true">✅</div><div class="metric-trend trend-up">↑ 9.8%</div></div><div class="metric-value" id="bPaid">—</div><div class="metric-title">Выплачено за ноябрь</div></div>
+      <div class="metric-card"><div class="metric-header"><div class="metric-icon icon-purple" aria-hidden="true">🏦</div><div class="metric-trend trend-up">каждую пятницу</div></div><div class="metric-value" id="bNext">—</div><div class="metric-title">Ближайшая автовыплата</div></div>
+    </div>
+    <section class="panel" aria-labelledby="t1">
+      <div class="panel-header"><span class="panel-title" id="t1">История выплат</span><div class="chips" role="group" aria-label="Статус" id="chips"></div></div>
+      <div class="table-wrap"><table class="data"><thead><tr><th>Номер</th><th>Дата</th><th>Способ</th><th class="num">Сумма</th><th>Статус</th></tr></thead><tbody id="tb"></tbody></table></div>
+      <div class="empty" id="empty" hidden>Выплат с таким статусом пока нет.</div>
+    </section>
+    <dialog class="modal" id="dlg" aria-labelledby="dt">
+      <form method="dialog" id="f" novalidate>
+        <h2 id="dt">Запрос выплаты</h2><p class="muted" style="margin-bottom:18px">Деньги придут на карту за 1–2 рабочих дня.</p>
+        <div class="field"><label for="amt">Сумма, ₽</label><input class="input" id="amt" type="number" min="1000" step="100" inputmode="numeric" placeholder="Например, 50000" aria-describedby="amtE"><div class="err" id="amtE" role="alert"></div></div>
+        <div class="field" style="margin-top:14px"><label for="way">Куда перевести</label><select class="select" id="way"><option>Карта •• 4417</option><option>Расчётный счёт</option><option>СБП по номеру телефона</option></select></div>
+        <div class="actions"><button class="btn btn--ghost" type="button" id="no">Отмена</button><button class="btn btn--primary" type="submit">Запросить</button></div>
+      </form>
+    </dialog>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script>
+
+var KEY = 'sc-payouts-v1';
+var P = [{ id: 'P-1042', d: '14.11.2026', w: 'Карта •• 4417', s: 120000, st: 'Выплачено' }, { id: 'P-1038', d: '07.11.2026', w: 'Карта •• 4417', s: 185500, st: 'Выплачено' },
+  { id: 'P-1031', d: '31.10.2026', w: 'Расчётный счёт', s: 240000, st: 'Выплачено' }, { id: 'P-1027', d: '24.10.2026', w: 'Карта •• 4417', s: 96300, st: 'Выплачено' }, { id: 'P-1019', d: '17.10.2026', w: 'СБП', s: 15000, st: 'Отклонено' }];
+try { var sv = JSON.parse(localStorage.getItem(KEY) || 'null'); if (sv && sv.length) P = sv; } catch (e) {}
+var BASE = 312400, f = 'Все', CLS = { 'Выплачено': 'b-done', 'В обработке': 'b-wait', 'Отклонено': 'b-fail' };
+function nextFri() { var d = new Date(2026, 10, 18); d.setDate(d.getDate() + ((5 - d.getDay() + 7) % 7 || 7)); return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' }); }
+function sums() {
+  var wait = P.filter(function (p) { return p.st === 'В обработке'; }).reduce(function (a, p) { return a + p.s; }, 0);
+  var paid = P.filter(function (p) { return p.st === 'Выплачено' && p.d.slice(3, 5) === '11'; }).reduce(function (a, p) { return a + p.s; }, 0);
+  $('#bAvail').textContent = rub(BASE - wait); $('#bWait').textContent = rub(wait); $('#bPaid').textContent = rub(paid); $('#bNext').textContent = nextFri();
+}
+function draw() {
+  var r = P.filter(function (p) { return f === 'Все' || p.st === f; });
+  $('#tb').innerHTML = r.map(function (p) { return '<tr><td><b>' + p.id + '</b></td><td class="muted">' + p.d + '</td><td>' + p.w + '</td><td class="num"><b>' + rub(p.s) + '</b></td><td><span class="badge ' + CLS[p.st] + '">' + p.st + '</span></td></tr>'; }).join('');
+  $('#empty').hidden = r.length > 0;
+}
+['Все', 'Выплачено', 'В обработке', 'Отклонено'].forEach(function (s) {
+  var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = s; b.setAttribute('aria-pressed', String(s === f));
+  b.onclick = function () { f = s; $$('.chip').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); draw(); }; $('#chips').appendChild(b);
+});
+var dlg = $('#dlg'), amt = $('#amt'), err = $('#amtE');
+$('#ask').onclick = function () { amt.value = ''; err.textContent = ''; amt.removeAttribute('aria-invalid'); if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); amt.focus(); };
+$('#no').onclick = function () { dlg.close(); };
+$('#f').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var v = Number(amt.value), wait = P.filter(function (p) { return p.st === 'В обработке'; }).reduce(function (a, p) { return a + p.s; }, 0), avail = BASE - wait;
+  var m = !v ? 'Введите сумму' : v < 1000 ? 'Минимум 1 000 ₽' : v > avail ? 'Доступно только ' + rub(avail) : '';
+  if (m) { err.textContent = m; amt.setAttribute('aria-invalid', 'true'); amt.focus(); return; }
+  P.unshift({ id: 'P-' + (1043 + P.length), d: new Date(2026, 10, 18).toLocaleDateString('ru-RU'), w: $('#way').value, s: v, st: 'В обработке' });
+  try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (x) {}
+  dlg.close(); sums(); draw(); toast('Выплата ' + rub(v) + ' запрошена');
+});
+sums(); draw();
+
+</script>
+</body>
+</html>

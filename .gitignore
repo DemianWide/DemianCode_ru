@@ -1,0 +1,11 @@
+# секреты и служебное не публикуем
+dist/
+сайт_3/server/send.config.php
+send.config.php
+node_modules/
+Thumbs.db
+
+# исходники и черновики
+Reference/
+_backup_originals/
+portfolio.html

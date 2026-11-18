@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinDash | Транзакции</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/pages.css">
+</head>
+<body data-search="1">
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">Fin<span>Dash</span></div>
+    <nav aria-label="Разделы"><ul class="nav-menu">
+        <li><a href="fintech_dashboard.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📊</span> Дашборд</a></li>
+        <li><a href="fintech_transactions.html" class="nav-item active" aria-current="page"><span class="nav-icon" aria-hidden="true">💸</span> Транзакции</a></li>
+        <li><a href="fintech_analytics.html" class="nav-item"><span class="nav-icon" aria-hidden="true">📈</span> Аналитика</a></li>
+        <li><a href="fintech_cards.html" class="nav-item"><span class="nav-icon" aria-hidden="true">💳</span> Карты</a></li>
+        <li style="margin-top: auto;"><a href="fintech_settings.html" class="nav-item"><span class="nav-icon" aria-hidden="true">⚙️</span> Настройки</a></li>
+    </ul></nav>
+  </aside>
+  <header class="header">
+    <button class="mobile-toggle" id="menuBtn" type="button">☰</button>
+    <div class="search-bar"><input type="text" id="globalSearch" placeholder="Поиск транзакций..."></div>
+    <div class="user-profile"><div class="user-info"><div class="user-name">Дмитрий</div><div class="user-role">Premium User</div></div><div class="avatar" aria-hidden="true">Д</div></div>
+  </header>
+  <main class="main-content" id="main">
+    <div class="dashboard-header"><h1>Транзакции</h1><p>Все операции по вашим счетам и картам</p></div>
+
+    <div class="kpis">
+      <div class="summary-card"><div class="card-title">Доходы</div><div class="card-amount" id="kIn">—</div><div class="card-trend trend-up">в выбранном списке</div></div>
+      <div class="summary-card"><div class="card-title">Расходы</div><div class="card-amount" id="kOut">—</div><div class="card-trend trend-down">в выбранном списке</div></div>
+      <div class="summary-card"><div class="card-title">Итого</div><div class="card-amount" id="kNet">—</div><div class="card-trend ">доходы минус расходы</div></div>
+    </div>
+    <section class="panel" aria-labelledby="tt">
+      <div class="panel-head"><h2 id="tt">Все операции</h2>
+        <div class="toolbar">
+          <div class="chips" role="group" aria-label="Тип операции" id="chips"></div>
+          <select class="select" id="cat" aria-label="Категория"></select>
+          <input class="input" id="q" type="search" placeholder="Поиск по описанию" aria-label="Поиск по описанию">
+          <button class="btn btn--ghost" id="exp" type="button">Скачать CSV</button>
+        </div></div>
+      <div class="table-wrap"><table class="data" id="tbl"><thead><tr>
+        <th aria-sort="descending" data-k="d"><button type="button">Дата</button></th><th aria-sort="none" data-k="n"><button type="button">Операция</button></th>
+        <th aria-sort="none" data-k="c"><button type="button">Категория</button></th><th class="num" aria-sort="none" data-k="a"><button type="button">Сумма</button></th><th>Статус</th></tr></thead><tbody></tbody></table></div>
+      <div class="empty" id="empty" hidden>Ничего не найдено. Измените фильтры.</div>
+      <div class="pager"><span class="count" id="count" aria-live="polite"></span><div class="toolbar"><button class="btn btn--ghost" id="prev" type="button">← Назад</button><button class="btn btn--ghost" id="next" type="button">Вперёд →</button></div></div>
+    </section>
+    <dialog class="modal" id="dlg" aria-labelledby="dt"><h2 id="dt"></h2><p class="muted" id="dsub"></p><div class="kv" id="dkv"></div>
+      <div class="actions"><button class="btn btn--ghost" id="dno" type="button">Закрыть</button><button class="btn btn--primary" id="dsh" type="button">Поделиться чеком</button></div></dialog>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script>
+
+document.body.dataset.search = '1';
+var IC = { 'Доход': '💰', 'Продукты': '🛒', 'Транспорт': '🚕', 'Подписки': '📺', 'Развлечения': '🎬', 'Здоровье': '💊', 'Дом': '🏠' };
+var D = [['2026-11-17', 'Stripe Payout', 'Доход', 2450, 'Выполнено', 'Visa •• 4417'], ['2026-11-17', 'Пятёрочка', 'Продукты', -64.2, 'Выполнено', 'Visa •• 4417'], ['2026-11-16', 'Яндекс Такси', 'Транспорт', -18.5, 'Выполнено', 'Mastercard •• 9082'],
+ ['2026-11-16', 'Netflix', 'Подписки', -15.99, 'Выполнено', 'Virtual •• 1203'], ['2026-11-15', 'Фриланс: проект FIELDCODE', 'Доход', 1200, 'В обработке', 'Visa •• 4417'], ['2026-11-14', 'Кинотеатр «Формула Кино»', 'Развлечения', -22, 'Выполнено', 'Mastercard •• 9082'],
+ ['2026-11-13', 'Аптека 36,6', 'Здоровье', -41.3, 'Выполнено', 'Visa •• 4417'], ['2026-11-12', 'Аренда квартиры', 'Дом', -650, 'Выполнено', 'Visa •• 4417'], ['2026-11-11', 'Spotify', 'Подписки', -9.99, 'Выполнено', 'Virtual •• 1203'],
+ ['2026-11-10', 'ВкусВилл', 'Продукты', -38.75, 'Выполнено', 'Mastercard •• 9082'], ['2026-11-09', 'Возврат за заказ', 'Доход', 54.9, 'Выполнено', 'Visa •• 4417'], ['2026-11-08', 'Метро: пополнение', 'Транспорт', -25, 'Выполнено', 'Mastercard •• 9082'],
+ ['2026-11-07', 'ЖКУ', 'Дом', -112.4, 'Выполнено', 'Visa •• 4417'], ['2026-11-06', 'Стоматология', 'Здоровье', -180, 'Выполнено', 'Visa •• 4417'], ['2026-11-05', 'Бонус за отзыв', 'Доход', 300, 'Выполнено', 'Visa •• 4417'],
+ ['2026-11-04', 'Самокат', 'Продукты', -27.6, 'В обработке', 'Mastercard •• 9082'], ['2026-11-03', 'Steam', 'Развлечения', -29.99, 'Выполнено', 'Virtual •• 1203'], ['2026-11-02', 'Интернет и связь', 'Дом', -24, 'Выполнено', 'Visa •• 4417']
+].map(function (r, i) { return { i: i, d: r[0], n: r[1], c: r[2], a: r[3], s: r[4], card: r[5] }; });
+var type = 'Все', cat = 'Все категории', sk = 'd', sd = -1, pg = 0, PER = 8;
+function dt(s) { return new Date(s + 'T12:00:00').toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }); }
+['Все', 'Доходы', 'Расходы'].forEach(function (s) {
+  var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = s; b.setAttribute('aria-pressed', String(s === type));
+  b.onclick = function () { type = s; pg = 0; $$('.chip').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); draw(); }; $('#chips').appendChild(b);
+});
+var cs = ['Все категории'].concat(Object.keys(IC)); $('#cat').innerHTML = cs.map(function (c) { return '<option>' + c + '</option>'; }).join('');
+$('#cat').onchange = function () { cat = this.value; pg = 0; draw(); }; $('#q').oninput = function () { pg = 0; draw(); };
+function list() {
+  var q = $('#q').value.trim().toLowerCase();
+  var r = D.filter(function (t) { return (type === 'Все' || (type === 'Доходы' ? t.a > 0 : t.a < 0)) && (cat === 'Все категории' || t.c === cat) && (!q || t.n.toLowerCase().indexOf(q) > -1); });
+  r.sort(function (a, b) { var x = a[sk], y = b[sk]; return (typeof x === 'string' ? x.localeCompare(y, 'ru') : x - y) * sd; }); return r;
+}
+function draw() {
+  var r = list(), tb = $('#tbl tbody'), pages = Math.max(1, Math.ceil(r.length / PER)); if (pg >= pages) pg = pages - 1;
+  var inc = r.filter(function (t) { return t.a > 0; }).reduce(function (a, t) { return a + t.a; }, 0), out = r.filter(function (t) { return t.a < 0; }).reduce(function (a, t) { return a + t.a; }, 0);
+  $('#kIn').textContent = usd(inc); $('#kOut').textContent = usd(out); $('#kNet').textContent = usd(inc + out, true);
+  tb.innerHTML = r.slice(pg * PER, pg * PER + PER).map(function (t) {
+    return '<tr data-i="' + t.i + '" tabindex="0"><td class="muted">' + dt(t.d) + '</td><td><span class="ico" aria-hidden="true">' + IC[t.c] + '</span>' + t.n + '</td><td class="muted">' + t.c + '</td><td class="num ' + (t.a > 0 ? 'plus' : 'minus') + '">' + usd(t.a, true) + '</td><td><span class="tx-status ' + (t.s === 'Выполнено' ? 'status-completed' : 'status-pending') + '">' + t.s + '</span></td></tr>';
+  }).join('');
+  $('#empty').hidden = r.length > 0; $('#tbl').hidden = !r.length;
+  $('#count').textContent = r.length ? 'Показано ' + (pg * PER + 1) + '–' + Math.min(r.length, pg * PER + PER) + ' из ' + r.length : '';
+  $('#prev').disabled = pg === 0; $('#next').disabled = pg >= pages - 1;
+}
+$('#prev').onclick = function () { pg--; draw(); }; $('#next').onclick = function () { pg++; draw(); };
+$$('#tbl th[data-k]').forEach(function (th) { th.querySelector('button').onclick = function () { var k = th.dataset.k; sd = sk === k ? -sd : (k === 'd' || k === 'a' ? -1 : 1); sk = k; pg = 0; $$('#tbl th[data-k]').forEach(function (x) { x.setAttribute('aria-sort', 'none'); }); th.setAttribute('aria-sort', sd === 1 ? 'ascending' : 'descending'); draw(); }; });
+var qs = new URLSearchParams(location.search).get('q'); if (qs) { $('#q').value = qs; $('#globalSearch').value = qs; }
+$('#globalSearch').addEventListener('input', function (e) { $('#q').value = e.target.value; pg = 0; draw(); });
+$('#exp').onclick = function () { var rows = [['Дата', 'Операция', 'Категория', 'Сумма, $', 'Статус', 'Карта']]; list().forEach(function (t) { rows.push([t.d, t.n, t.c, t.a, t.s, t.card]); }); csv('transactions.csv', rows); toast('Файл transactions.csv скачан'); };
+var dlg = $('#dlg'), lastRow = null, cur = null;
+function show(tr) { var t = D[+tr.dataset.i]; cur = t; lastRow = tr;
+  $('#dt').textContent = t.n; $('#dsub').textContent = dt(t.d) + ' · ' + t.c;
+  $('#dkv').innerHTML = '<div><span>Сумма</span><b>' + usd(t.a, true) + '</b></div><div><span>Статус</span><b>' + t.s + '</b></div><div><span>Карта</span><b>' + t.card + '</b></div><div><span>Комиссия</span><b>$0.00</b></div><div><span>Номер операции</span><b>TX-' + (88200 + t.i * 17) + '</b></div>';
+  if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
+$('#tbl tbody').addEventListener('click', function (e) { var tr = e.target.closest('tr'); if (tr) show(tr); });
+$('#tbl tbody').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { var tr = e.target.closest('tr'); if (tr) { e.preventDefault(); show(tr); } } });
+$('#dno').onclick = function () { dlg.close(); if (lastRow) { var i = lastRow.dataset.i, n = $('#tbl tbody tr[data-i="' + i + '"]'); if (n) n.focus(); } };
+$('#dsh').onclick = function () { dlg.close(); toast('Ссылка на чек скопирована'); };
+draw();
+
+</script>
+</body>
+</html>
