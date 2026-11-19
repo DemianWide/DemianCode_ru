@@ -38,6 +38,7 @@ const STEPS = [
   { k: 'comment', t: 'Комментарий', opt: true, q: 'Что ещё важно учесть? Любые пожелания своими словами.', skip: true }
 ];
 
+const BTN_MASTER = 'Связаться с мастером';
 const MAX_PHOTOS = 15;
 const TTL_STATE = 7 * 24 * 3600;
 const TTL_BRIEF = 90 * 24 * 3600;
@@ -80,7 +81,8 @@ function keysFor(step) {
   if (step.opts) for (let i = 0; i < step.opts.length; i += 2) rows.push(step.opts.slice(i, i + 2));
   if (step.photos) rows.push(['Готово', 'Пропустить']);
   else if (step.skip) rows.push(['Пропустить']);
-  return rows.length ? rows : null;
+  rows.push([BTN_MASTER]);
+  return rows;
 }
 
 /* ---------- анкета ---------- */
@@ -149,7 +151,7 @@ async function finish(env, chat, st) {
   await env.BRIEFS.put(`brief:${id}`, JSON.stringify(record), { expirationTtl: TTL_BRIEF, metadata: { c: clip(st.a.company || '', 60), f: clip(st.a.field || '', 40), t: Date.now() } });
   await env.BRIEFS.delete(`st:${chat}`);
 
-  await say(env, chat, 'Спасибо! Анкета отправлена. Мастер посмотрит её и напишет вам прямо здесь, в этом чате, с ценой и сроками, обычно в тот же день. Можно писать сюда дополнения, я всё передам.');
+  await say(env, chat, 'Спасибо! Анкета отправлена. Ответ с ценой и сроками вы получите здесь, в этом чате, в течение нескольких часов. Если нужно что-то добавить или уточнить, просто напишите сюда, я передам мастеру.');
 
   const owner = env.CHAT_ID;
   const head = `<b>Новая анкета на сайт</b>\nКомпания: <b>${esc(st.a.company)}</b>\nСфера: ${esc(st.a.field)}\nГород: ${esc(st.a.city)}\nКлиент: ${who.user ? '@' + esc(who.user) : esc(who.name || 'без ника')}\nФото: ${photos.length}\nНомер: <code>${id}</code>\n\n<i>Чтобы написать клиенту (цена, сроки), ответьте на это сообщение функцией «Ответить», бот перешлёт.</i>`;
@@ -176,6 +178,16 @@ async function advance(env, chat, st) {
   if (st.i >= STEPS.length) return finish(env, chat, st);
   await putState(env, chat, st);
   return ask(env, chat, st.i);
+}
+
+// пересылка сообщения клиента владельцу (с возможностью ответить через Reply)
+async function toOwner(env, msg) {
+  const chat = msg.chat.id;
+  const who = msg.from?.username ? '@' + msg.from.username : msg.from?.first_name || 'клиент';
+  const head = await tg(env, 'sendMessage', { chat_id: env.CHAT_ID, text: `<b>Сообщение от ${esc(who)}</b>\n<i>Ответьте на него, и бот перешлёт клиенту.</i>`, parse_mode: 'HTML' });
+  await mapOwner(env, head, chat);
+  const c = await tg(env, 'copyMessage', { chat_id: env.CHAT_ID, from_chat_id: chat, message_id: msg.message_id });
+  await mapOwner(env, c, chat);
 }
 
 async function onMessage(env, msg) {
@@ -205,14 +217,23 @@ async function onMessage(env, msg) {
   if (!st) {
     // нет активной анкеты: это сообщение мастеру, передаём владельцу
     if (String(chat) === String(env.CHAT_ID)) return say(env, chat, 'Чтобы пройти анкету как клиент, нажмите /start.');
-    const who = (msg.from?.username ? '@' + msg.from.username : msg.from?.first_name || 'клиент');
-    const head = await tg(env, 'sendMessage', { chat_id: env.CHAT_ID, text: `<b>Сообщение от ${esc(who)}</b>\n<i>Ответьте на него, и бот перешлёт клиенту.</i>`, parse_mode: 'HTML' });
-    await mapOwner(env, head, chat);
-    const c = await tg(env, 'copyMessage', { chat_id: env.CHAT_ID, from_chat_id: chat, message_id: msg.message_id });
-    await mapOwner(env, c, chat);
+    if (text === BTN_MASTER) return say(env, chat, 'Напишите вопрос одним сообщением, я передам мастеру.');
+    await toOwner(env, msg);
     return say(env, chat, 'Передал мастеру, он ответит здесь. Если хотите заказать сайт, нажмите /start.');
   }
   const step = STEPS[st.i];
+
+  // кнопка «Связаться с мастером»: следующее сообщение уходит мастеру, анкета сохраняется
+  if (text === BTN_MASTER || /^\/master\b/i.test(text)) {
+    st.relay = true; await putState(env, chat, st);
+    return say(env, chat, 'Напишите вопрос одним сообщением (можно с фото), я передам мастеру. Анкета сохранится, потом продолжим.');
+  }
+  if (st.relay) {
+    st.relay = false; await putState(env, chat, st);
+    await toOwner(env, msg);
+    await say(env, chat, 'Передал мастеру, он ответит здесь в чате. Продолжаем анкету.');
+    return ask(env, chat, st.i);
+  }
 
   // фото принимаем на любом шаге
   const doc = msg.document && /^image\//.test(msg.document.mime_type || '') ? msg.document : null;
