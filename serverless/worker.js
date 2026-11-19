@@ -65,6 +65,10 @@ async function tg(env, method, payload) {
   } catch { return { ok: false }; }
 }
 
+// запоминаем, какому клиенту принадлежит сообщение у владельца (для ответа через Reply)
+const mapOwner = (env, r, client) =>
+  r && r.ok && r.result ? env.BRIEFS.put(`own:${r.result.message_id}`, String(client), { expirationTtl: 30 * 24 * 3600 }) : null;
+
 const say = (env, chat, text, keys) =>
   tg(env, 'sendMessage', {
     chat_id: chat, text, parse_mode: 'HTML', disable_web_page_preview: true,
@@ -145,11 +149,11 @@ async function finish(env, chat, st) {
   await env.BRIEFS.put(`brief:${id}`, JSON.stringify(record), { expirationTtl: TTL_BRIEF, metadata: { c: clip(st.a.company || '', 60), f: clip(st.a.field || '', 40), t: Date.now() } });
   await env.BRIEFS.delete(`st:${chat}`);
 
-  await say(env, chat, 'Спасибо! Анкета отправлена. Мастер посмотрит её и напишет вам в Telegram, обычно в тот же день.');
+  await say(env, chat, 'Спасибо! Анкета отправлена. Мастер посмотрит её и напишет вам прямо здесь, в этом чате, с ценой и сроками, обычно в тот же день. Можно писать сюда дополнения, я всё передам.');
 
   const owner = env.CHAT_ID;
-  const head = `<b>Новая анкета на сайт</b>\nКомпания: <b>${esc(st.a.company)}</b>\nСфера: ${esc(st.a.field)}\nГород: ${esc(st.a.city)}\nКлиент: ${who.user ? '@' + esc(who.user) : esc(who.name || 'без ника')}\nФото: ${photos.length}\nНомер: <code>${id}</code>`;
-  await tg(env, 'sendMessage', { chat_id: owner, text: head, parse_mode: 'HTML' });
+  const head = `<b>Новая анкета на сайт</b>\nКомпания: <b>${esc(st.a.company)}</b>\nСфера: ${esc(st.a.field)}\nГород: ${esc(st.a.city)}\nКлиент: ${who.user ? '@' + esc(who.user) : esc(who.name || 'без ника')}\nФото: ${photos.length}\nНомер: <code>${id}</code>\n\n<i>Чтобы написать клиенту (цена, сроки), ответьте на это сообщение функцией «Ответить», бот перешлёт.</i>`;
+  await mapOwner(env, await tg(env, 'sendMessage', { chat_id: owner, text: head, parse_mode: 'HTML' }), chat);
 
   const form = new FormData();
   form.append('chat_id', String(owner));
@@ -179,6 +183,15 @@ async function onMessage(env, msg) {
   const chat = msg.chat.id;
   const text = clip(msg.text || msg.caption || '', 1500);
 
+  // владелец отвечает (Reply) на сообщение клиента -> пересылаем клиенту
+  if (String(chat) === String(env.CHAT_ID) && msg.reply_to_message) {
+    const client = await env.BRIEFS.get(`own:${msg.reply_to_message.message_id}`);
+    if (client) {
+      const r = await tg(env, 'copyMessage', { chat_id: client, from_chat_id: chat, message_id: msg.message_id });
+      return tg(env, 'setMessageReaction', { chat_id: chat, message_id: msg.message_id, reaction: [{ type: 'emoji', emoji: r.ok ? '👍' : '👎' }] });
+    }
+  }
+
   if (/^\/start\b/i.test(text)) return startBrief(env, msg);
   if (/^\/cancel\b/i.test(text)) {
     await env.BRIEFS.delete(`st:${chat}`);
@@ -189,7 +202,16 @@ async function onMessage(env, msg) {
   }
 
   const st = await getState(env, chat);
-  if (!st) return say(env, chat, 'Чтобы заказать сайт, нажмите /start.');
+  if (!st) {
+    // нет активной анкеты: это сообщение мастеру, передаём владельцу
+    if (String(chat) === String(env.CHAT_ID)) return say(env, chat, 'Чтобы пройти анкету как клиент, нажмите /start.');
+    const who = (msg.from?.username ? '@' + msg.from.username : msg.from?.first_name || 'клиент');
+    const head = await tg(env, 'sendMessage', { chat_id: env.CHAT_ID, text: `<b>Сообщение от ${esc(who)}</b>\n<i>Ответьте на него, и бот перешлёт клиенту.</i>`, parse_mode: 'HTML' });
+    await mapOwner(env, head, chat);
+    const c = await tg(env, 'copyMessage', { chat_id: env.CHAT_ID, from_chat_id: chat, message_id: msg.message_id });
+    await mapOwner(env, c, chat);
+    return say(env, chat, 'Передал мастеру, он ответит здесь. Если хотите заказать сайт, нажмите /start.');
+  }
   const step = STEPS[st.i];
 
   // фото принимаем на любом шаге
