@@ -5,7 +5,5 @@ send.config.php
 node_modules/
 Thumbs.db
 
-# исходники и черновики
-Reference/
-_backup_originals/
-portfolio.html
+tools/bot.config.ps1
+Clients/

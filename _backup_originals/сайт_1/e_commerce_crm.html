@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce CRM | Управление заказами (Светлая тема)</title>
+    <style>
+        /* === ПРЕМИУМ СВЕТЛАЯ ТЕМА === */
+        :root {
+            --bg-base: #f8fafc;       /* Светло-серо-голубой фон страницы */
+            --bg-surface: #ffffff;    /* Белый фон бокового меню и шапки */
+            --bg-column: #f1f5f9;     /* Фон колонок доски */
+            --bg-card: #ffffff;       /* Фон карточек заказов */
+            --bg-hover: #e2e8f0;      
+            
+            --accent: #4f46e5;        /* Индиго (Главный акцент) */
+            --accent-hover: #4338ca;
+            --accent-light: #e0e7ff;
+            
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #0ea5e9;
+            
+            --radius: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* === ГЛАВНАЯ СЕТКА === */
+        .app-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            grid-template-rows: 76px 1fr;
+            height: 100vh;
+        }
+
+        /* === САЙДБАР === */
+        .sidebar {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border);
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 40px;
+            padding-left: 12px;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo span { color: var(--accent); }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .nav-icon { font-size: 1.1rem; opacity: 0.8; }
+        .nav-item.active .nav-icon { opacity: 1; }
+
+        /* === ХЕДЕР === */
+        .header {
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+            z-index: 5;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            background-color: #f1f5f9;
+            border: 1px solid transparent;
+            padding: 10px 16px 10px 40px;
+            border-radius: 99px;
+            font-size: 14px;
+            color: var(--text-main);
+            width: 240px;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .search-box input:focus {
+            background-color: var(--bg-surface);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0.5;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding-left: 24px;
+            border-left: 1px solid var(--border);
+        }
+
+        .user-info { text-align: right; }
+        .user-name { font-weight: 600; font-size: 14px; }
+        .user-role { font-size: 12px; color: var(--text-muted); }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* === KANBAN ДОСКА === */
+        .board-container {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+            padding: 32px 36px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            display: flex;
+            gap: 24px;
+            height: 100%;
+        }
+
+        .kanban-column {
+            background-color: var(--bg-column);
+            border-radius: 16px;
+            width: 340px;
+            min-width: 340px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+            max-height: 100%;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        .column-header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-main);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .column-badge {
+            background-color: #e2e8f0;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Зона для бросания карточек */
+        .column-body {
+            padding: 16px;
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: var(--transition);
+        }
+        
+        /* Кастомный скролл */
+        .column-body::-webkit-scrollbar { width: 6px; }
+        .column-body::-webkit-scrollbar-track { background: transparent; }
+        .column-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* Эффект подсветки колонки при Drag-and-Drop */
+        .column-body.drag-over {
+            background-color: var(--accent-light);
+            border-radius: 12px;
+            box-shadow: inset 0 0 0 2px var(--accent);
+        }
+
+        /* === КАРТОЧКА ЗАКАЗА === */
+        .order-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: grab;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+
+        .order-card:active {
+            cursor: grabbing;
+        }
+
+        .order-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+            border: 2px dashed var(--accent);
+            box-shadow: none;
+        }
+
+        /* Внутренности карточки */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        .order-amount {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 14px;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .order-desc {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 12px;
+        }
+
+        .customer-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .customer-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+            display: inline-block;
+        }
+
+        /* Бейджи статусов внутри карточек */
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-paid { background: #d1fae5; color: var(--success); }
+        .badge-cash { background: #fef3c7; color: var(--warning); }
+        .badge-urgent { background: #fee2e2; color: var(--danger); }
+        .badge-card { background: #e0f2fe; color: var(--info); }
+        
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- Сайдбар -->
+        <aside class="sidebar">
+            <div class="logo">
+                Store<span>SRM</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="ecommerce_dashboard.html" class="nav-item"><span class="nav-icon">📊</span> Дашборд</a></li>
+                <li><a href="#" class="nav-item active"><span class="nav-icon">📦</span> Заказы</a></li>
+                <li><a href="#" class="nav-item"><span class="nav-icon">👥</span> Клиенты</a></li>
+                <li><a href="#" class="nav-item"><span class="nav-icon">📈</span> Аналитика</a></li>
+                <li><a href="#" class="nav-item"><span class="nav-icon">💳</span> Выплаты</a></li>
+                <li style="margin-top: auto;"><a href="#" class="nav-item"><span class="nav-icon">⚙️</span> Настройки</a></li>
+            </ul>
+        </aside>
+
+        <!-- Хедер -->
+        <header class="header">
+            <div class="page-title">Управление заказами</div>
+            
+            <div class="header-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="Поиск по номеру заказа...">
+                </div>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Дмитрий</div>
+                        <div class="user-role">Владелец магазина</div>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&auto=format&fit=crop" alt="Profile" class="avatar">
+                </div>
+            </div>
+        </header>
+
+        <!-- Kanban Доска -->
+        <main class="board-container">
+            
+            <!-- Колонна 1: Новые заказы -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    Новые заказы
+                    <span class="column-badge" id="count-new">3</span>
+                </div>
+                <!-- Зона Drop (куда кидать карточки) -->
+                <div class="column-body" id="col-new">
+                    
+                    <div class="order-card" draggable="true">
+                        <div class="card-header">
+                            <span class="order-id">#ORD-782</span>
+                            <span class="order-amount">12 400 ₽</span>
+                        </div>
+                        <div class="order-desc">Беспроводные наушники Sony WH-1000XM4, Чехол силиконовый</div>
+                        <div class="card-footer">
+                            <span class="customer-name"><span class="customer-avatar"></span> Алексей В.</span>
+                            <span class="badge badge-paid">Оплачен</span>
+                        </div>
+                    </div>
+
+                    <div class="order-card" draggable="true">
+                        <div class="card-header">
+                            <span class="order-id">#ORD-783</span>
+                            <span class="order-amount">4 150 ₽</span>
+                        </div>
+                        <div class="order-desc">Механическая клавиатура Keychron K2, Свитчи Gateron Brown</div>
+                        <div class="card-footer">
+                            <span class="customer-name"><span class="customer-avatar"></span> Мария К.</span>
+                            <span class="badge badge-cash">При получении</span>
+                        </div>
+                    </div>
+
+                    <div class="order-card" draggable="true">
+                        <div class="card-header">
+                            <span class="order-id">#ORD-786</span>
+                            <span class="order-amount">89 990 ₽</span>
+                        </div>
+                        <div class="order-desc">Apple MacBook Air M1 256GB Space Gray (Срочная доставка)</div>
+                        <div class="card-footer">
+                            <span class="customer-name"><span class="customer-avatar"></span> Игорь С.</span>
+                            <span class="badge badge-urgent">Срочно</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Колонна 2: В сборке -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    В сборке
+                    <span class="column-badge" id="count-build">2</span>
+                </div>
+                <div class="column-body" id="col-build">
+                    
+                    <div class="order-card" draggable="true">
+                        <div class="card-header">
+                            <span class="order-id">#ORD-779</span>
+                            <span class="order-amount">2 100 ₽</span>
+                        </div>
+                        <div class="order-desc">Защитное стекло iPhone 14 Pro, Кабель Type-C 2м</div>
+                        <div class="card-footer">
+                            <span class="customer-name"><span class="customer-avatar"></span> Елена М.</span>
+                            <span class="badge badge-paid">Оплачен</span>
+                        </div>
+                    </div>
+
+                    <div class="order-card" draggable="true">
+                        <div class="card-header">
+                            <span class="order-id">#ORD-775</span>
+                            <span class="order-amount">15 600 ₽</span>
+                        </div>
+                        <div class="order-desc">Умная колонка Яндекс Станция Макс, Умная лампа x2</div>
+                        <div class="card-footer">
+                            <span class="customer-name"><span class="customer-avatar"></span> Дмитрий Т.</span>
+                            <span class="badge badge-card">Картой курьеру</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Колонна 3: Курьер -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    Передан курьеру
+                    <span class="column-badge" id="count-delivery">1</span>
+                </div>
+                <div class="column-body" id="col-delivery">
+                    
+                    <div class="order-card" draggable="true">
+                        <div class="card-header">
+                            <span class="order-id">#ORD-770</span>
+                            <span class="order-amount">7 300 ₽</span>
+                        </div>
+                        <div class="order-desc">Роутер TP-Link Archer AX73, Патч-корд 5м</div>
+                        <div class="card-footer">
+                            <span class="customer-name"><span class="customer-avatar"></span> Антон П.</span>
+                            <span class="badge badge-paid">Оплачен</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Колонна 4: Доставлены -->
+            <div class="kanban-column">
+                <div class="column-header">
+                    Доставлены
+                    <span class="column-badge" id="count-done">1</span>
+                </div>
+                <div class="column-body" id="col-done">
+                    
+                    <div class="order-card" draggable="true">
+                        <div class="card-header">
+                            <span class="order-id">#ORD-765</span>
+                            <span class="order-amount">35 000 ₽</span>
+                        </div>
+                        <div class="order-desc">Игровая приставка Sony PlayStation 5 Digital Edition</div>
+                        <div class="card-footer">
+                            <span class="customer-name"><span class="customer-avatar"></span> Влад О.</span>
+                            <span class="badge badge-paid">Оплачен</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- === JAVASCRIPT: Логика Drag and Drop === -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const cards = document.querySelectorAll('.order-card');
+            const columns = document.querySelectorAll('.column-body');
+            
+            let draggedCard = null;
+
+            // 1. Настраиваем события для каждой КАРТОЧКИ
+            cards.forEach(card => {
+                card.addEventListener('dragstart', function() {
+                    draggedCard = this;
+                    // Микро-задержка для красивого эффекта взятия карточки
+                    setTimeout(() => {
+                        this.classList.add('dragging');
+                    }, 0);
+                });
+
+                card.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    draggedCard = null;
+                    updateCounters(); 
+                });
+            });
+
+            // 2. Настраиваем Drop-зоны (Колонки)
+            columns.forEach(column => {
+                
+                column.addEventListener('dragover', function(e) {
+                    e.preventDefault(); // Разрешаем сброс
+                    this.classList.add('drag-over'); 
+                });
+
+                column.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over'); 
+                });
+
+                column.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over'); 
+                    
+                    if (draggedCard) {
+                        this.appendChild(draggedCard);
+                    }
+                });
+            });
+
+            // 3. Обновление счетчиков в шапках колонок
+            function updateCounters() {
+                document.getElementById('count-new').textContent = document.getElementById('col-new').children.length;
+                document.getElementById('count-build').textContent = document.getElementById('col-build').children.length;
+                document.getElementById('count-delivery').textContent = document.getElementById('col-delivery').children.length;
+                document.getElementById('count-done').textContent = document.getElementById('col-done').children.length;
+            }
+            
+            // Запуск счетчиков при загрузке
+            updateCounters();
+        });
+    </script>
+</body>
+</html>

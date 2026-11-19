@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
 RENAME = {"сайт_1": "site-1", "сайт_2": "site-2", "сайт_3": "site-3"}
-SKIP_TOP = {"_backup_originals", "dist", "tools", "docs", "serverless", ".github", "Reference", ".git", ".gitignore", "portfolio.html",
+SKIP_TOP = {"_backup_originals", "dist", "tools", "docs", "serverless","Clients", ".github", "Reference", ".git", ".gitignore", "portfolio.html",
             "start.bat", "build.bat", "README.md", "image_prompts_sites.txt"}
 SKIP_ANY = {"_originals", "server", "node_modules", "Thumbs.db", "README.txt", ".DS_Store"}
 
